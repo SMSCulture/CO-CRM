@@ -1,0 +1,68 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  scroll-behavior: smooth;
+}
+
+@layer base {
+  :root {
+    /* Shadcn HSL semantic tokens — same palette as cultureowl_front's dashboard theme. */
+    --background: 60 9% 98%;
+    --foreground: 0 0% 7%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 7%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 7%;
+    --primary: 0 0% 7%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 0 0% 98%;
+    --secondary-foreground: 0 0% 7%;
+    --muted: 0 0% 98%;
+    --muted-foreground: 180 1% 22%;
+    --accent: 0 0% 96%;
+    --accent-foreground: 0 0% 7%;
+    --destructive: 5 80% 57%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 0 0% 90%;
+    --input: 0 0% 90%;
+    --ring: 0 0% 7%;
+    --radius: 0.5rem;
+    --placeholder-foreground: 0 0% 55%;
+
+    --sidebar: 0 0% 100%;
+    --sidebar-foreground: 0 0% 7%;
+    --sidebar-border: 0 0% 90%;
+    --sidebar-accent: 0 0% 95%;
+    --sidebar-accent-foreground: 0 0% 22%;
+    --sidebar-ring: 0 0% 40%;
+
+    /* CultureOwl brand tokens — HSL channel triplets, exact values copied
+     * from cultureowl_front's styles/co-design-system.css. Edit ONLY here
+     * to change a brand color; tailwind.config.ts references these vars. */
+    --co-blue: 204 63% 53%; /* #3d98d3 */
+    --co-blue-hover: 204 62% 46%; /* #2c84be */
+    --co-orange: 24 90% 57%; /* #f47d30 */
+    --co-orange-hover: 24 75% 49%; /* #da6a1f */
+    --co-pink: 338 81% 57%; /* #ea3a7a */
+    --co-pink-hover: 337 66% 49%; /* #d02a6a */
+    --co-red: 6 78% 57%; /* #e74e3d */
+    --co-red-hover: 6 65% 49%; /* #ce3d2c */
+    --co-purple: 272 46% 45%; /* #773ea9 */
+    --co-purple-hover: 272 49% 36%; /* #5f2f89 */
+    --co-black: 0 0% 7%; /* #111111 */
+    --co-grey: 180 2% 22%; /* #373939 */
+    --co-border: 0 0% 90%; /* #e6e6e6 */
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-jakarta), sans-serif;
+  }
+}
