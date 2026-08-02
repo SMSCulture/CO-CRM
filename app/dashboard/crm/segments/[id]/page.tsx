@@ -73,7 +73,7 @@ export default function SegmentDetailPage() {
       </div>
 
       <div className="flex flex-wrap gap-2">
-        <Link href="/dashboard/marketing/campaigns">
+        <Link href={`/dashboard/marketing/campaigns?segment=${segment.id}`}>
           <Button className="gap-2">
             <Sparkles className="h-4 w-4" />
             Create Campaign

@@ -79,8 +79,25 @@ const MOCK_SEGMENTS: Segment[] = [
 ];
 
 export function useSegmentsData() {
-  const [segments] = useState<Segment[]>(MOCK_SEGMENTS);
-  return { segments, isLoading: false };
+  const [segments, setSegments] = useState<Segment[]>(MOCK_SEGMENTS);
+
+  function addSegment(input: { name: string; description: string; filters: string[] }) {
+    const newSegment: Segment = {
+      id: crypto.randomUUID(),
+      name: input.name,
+      description: input.description || "Custom segment.",
+      contactCount: 0,
+      lastRecalculated: "Just now",
+      filters: input.filters.length > 0 ? input.filters : ["No filters applied"],
+      interests: [],
+      topCities: [],
+      avgSpend: 0,
+      avgAge: 0,
+    };
+    setSegments((prev) => [newSegment, ...prev]);
+  }
+
+  return { segments, isLoading: false, addSegment };
 }
 
 export function useSegment(id: string) {
