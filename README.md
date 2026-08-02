@@ -12,15 +12,33 @@ cp .env.example .env.local   # fill in real values — see below
 npm run dev                  # http://localhost:3000 (or next available port)
 ```
 
+## Navigation / IA
+
+The sidebar is split into three top-level areas, deliberately not one flat "Marketing" bucket like the original Lovable prototype:
+
+- **CRM** — Contacts, Segments, Tags. The audience database and relationship layer.
+- **Your Marketing** — Email Campaigns, Templates. **Org-owned channels** — sends directly to the org's own CRM contacts.
+- **CultureOwl Promotion** — eScoops, Social, Banners, Cultural Stories. **CultureOwl-managed distribution mechanisms** — these use a CRM segment as a *targeting brief*, not a direct send list; CultureOwl may extend reach to its broader matching network without exposing non-connected users' identities to the org. This is a fundamentally different mechanism from Your Marketing, which is why it's a separate nav section rather than a channel option inside one campaign builder.
+
+**Note on auth right now:** `app/dashboard/layout.tsx` has auth temporarily bypassed for local visual preview — the real `<ProtectedPage>` wrapper still lives in `components/protected-page.tsx` and just needs to go back around `{children}` (see the TODO comment in `app/dashboard/layout.tsx`) before testing real role gating.
+
 ## What's real vs. stubbed
 
 **Fully working:**
-- Auth — OTP request/verify, JWT httpOnly cookie session, `/api/graphql` BFF proxy, role-based `<ProtectedPage>` gating. Ported directly from `cultureowl_front`, not rebuilt. Points at the same backend — set `JWT_SECRET`/`JWT_REFRESH_SECRET` to the same values as `cultureowl_front` if you want a session created in one app to be valid in the other.
+- Auth — OTP request/verify, JWT httpOnly cookie session, `/api/graphql` BFF proxy, role-based `<ProtectedPage>` gating. Ported directly from `cultureowl_front`, not rebuilt (currently bypassed in the dashboard layout for local preview — see note above). Points at the same backend — set `JWT_SECRET`/`JWT_REFRESH_SECRET` to the same values as `cultureowl_front` if you want a session created in one app to be valid in the other.
 - Design system — same color tokens, same Plus Jakarta Sans font, same shadcn/ui primitives, same look & feel (rounded cards, soft shadows) as `cultureowl_front`'s dashboard theme.
 - Dashboard shell — sidebar nav, protected `/dashboard/*` routes.
 - **Tags module** (`app/dashboard/tags/`) — fully functional CRUD UI (create/rename/delete, search, color swatches), built as the reference implementation for every other module's pattern.
+- **Contacts module** (`app/dashboard/contacts/`) — full list UI (search, tag-pill filters, table) running on mock data (`hooks/use-contacts-data.ts`), same 8-patron dataset as the original prototype.
+- **Segments module** (`app/dashboard/segments/`) — list + detail view running on mock data (`hooks/use-segments-data.ts`). Detail page matches the specified layout (name/count/filters, Create Campaign/Export/Edit Segment buttons, audience summary, geography, interests). "Create Campaign" is a real link to Email Campaigns — it does not yet carry the segment selection as state (see Deferred below).
 
-**Stubbed (placeholder pages only):** Contacts, Segments, Campaigns, Analytics. Each stub page explains what it needs before it can be built for real.
+**Stubbed (placeholder pages only):** Email Campaigns, Templates, eScoops, Social, Banners, Cultural Stories, Analytics.
+
+## Deferred — product direction, not yet built
+
+1. **Real segment→campaign handoff.** Clicking "Create Campaign" on a segment should open Email Campaigns with that audience pre-selected (and the reverse: starting in Your Marketing and picking a CRM segment). Currently just navigates there with no state carried — see the TODO in `app/dashboard/campaigns/page.tsx`.
+2. **Org-owned vs. CultureOwl-managed privacy model, enforced.** The nav split (Your Marketing vs. CultureOwl Promotion) makes the distinction visible; the actual mechanics aren't implemented anywhere yet.
+3. **Marketing Services tab.** A browsable upsell catalog of CultureOwl promotional services (article inclusion, push notifications, etc.), loosely inspired by [Fever Partners' services catalog](https://feverpartners.zendesk.com/hc/en-us/articles/24437837517714-Services). Explicitly a work-in-progress idea, not spec'd enough to build yet.
 
 ## The one open problem: no confirmed CRM schema yet
 

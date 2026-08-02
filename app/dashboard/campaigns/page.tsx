@@ -1,13 +1,18 @@
 import { Card, CardContent } from "@/components/ui/card";
 
+// TODO: real segment→campaign handoff. When a segment's "Create Campaign"
+// button (app/dashboard/segments/[id]/page.tsx) links here, it should carry
+// the segment id (query param or a shared store slice) so this page opens
+// with that audience pre-selected instead of starting from scratch. Not
+// wired up yet — deferred per the CRM/Marketing IA plan.
 export default function CampaignsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold text-foreground">Campaigns</h1>
+        <h1 className="text-3xl font-bold text-foreground">Email Campaigns</h1>
         <p className="mt-1 text-muted-foreground">
-          Not built yet — should reuse cultureowl_front&apos;s existing Novel/Tiptap escoop and dedicated-email builder
-          components rather than a new rich-text implementation.
+          Org-owned — sends directly to your own contacts. Not built yet — should reuse cultureowl_front&apos;s existing
+          Novel/Tiptap escoop and dedicated-email builder components rather than a new rich-text implementation.
         </p>
       </div>
       <Card className="rounded-xl border-border border-dashed">
