@@ -38,7 +38,7 @@ export default function DashboardHomePage() {
         <CardContent className="p-6 text-sm text-muted-foreground">
           These KPIs will populate once the Contacts, Segments, and Campaigns modules are wired to real
           GraphQL queries against the CultureOwl backend — see the{" "}
-          <a href="/dashboard/tags" className="font-medium text-co-blue hover:underline">
+          <a href="/dashboard/crm/tags" className="font-medium text-co-blue hover:underline">
             Tags module
           </a>{" "}
           for a fully working example of the pattern.
