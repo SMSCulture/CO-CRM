@@ -5,24 +5,22 @@ import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 
 const TABS = [
-  { href: "/dashboard/marketing", label: "Dashboard", exact: true },
-  { href: "/dashboard/marketing/campaigns", label: "Campaigns" },
-  { href: "/dashboard/marketing/templates", label: "Templates" },
-  { href: "/dashboard/marketing/links-tracking", label: "Links & Tracking" },
+  { href: "/dashboard/settings", label: "General", exact: true },
+  { href: "/dashboard/settings/integrations", label: "Integrations" },
 ] as const;
 
-export default function MarketingLayout({ children }: { children: React.ReactNode }) {
+export default function SettingsLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
 
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold text-foreground">Your Marketing</h1>
-        <p className="mt-1 text-muted-foreground">Reach the audience you already have — campaigns, templates, and tracked links.</p>
+        <h1 className="text-3xl font-bold text-foreground">Settings</h1>
+        <p className="mt-1 text-muted-foreground">Organization, team, and account settings.</p>
       </div>
 
       <div className="border-b border-border">
-        <nav className="flex flex-wrap gap-1 -mb-px">
+        <nav className="-mb-px flex flex-wrap gap-1">
           {TABS.map((tab) => {
             const isActive = "exact" in tab && tab.exact ? pathname === tab.href : pathname?.startsWith(tab.href);
             return (
