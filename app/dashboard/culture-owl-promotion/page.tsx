@@ -3,12 +3,12 @@ import { Mail, Share2, Image as ImageIcon, Star, BookOpen, Sparkles, ChevronRigh
 import { Card, CardContent } from "@/components/ui/card";
 
 const PROMOTION_OPTIONS = [
-  { href: "/dashboard/marketing/escoops", label: "Book an eScoop", icon: Mail },
-  { href: "/dashboard/marketing/social", label: "Request Social Promotion", icon: Share2 },
-  { href: "/dashboard/marketing/banners", label: "Add Banner Advertising", icon: ImageIcon },
-  { href: "/dashboard/marketing/featured-placement", label: "Secure Featured Placement", icon: Star },
-  { href: "/dashboard/marketing/cultural-stories", label: "Request a Cultural Story", icon: BookOpen },
-  { href: "/dashboard/marketing/managed-campaign", label: "Build a Managed Promotional Campaign", icon: Sparkles },
+  { href: "/dashboard/culture-owl-promotion/escoops", label: "Book an eScoop", icon: Mail },
+  { href: "/dashboard/culture-owl-promotion/social", label: "Request Social Promotion", icon: Share2 },
+  { href: "/dashboard/culture-owl-promotion/banners", label: "Add Banner Advertising", icon: ImageIcon },
+  { href: "/dashboard/culture-owl-promotion/featured-placement", label: "Secure Featured Placement", icon: Star },
+  { href: "/dashboard/culture-owl-promotion/cultural-stories", label: "Request a Cultural Story", icon: BookOpen },
+  { href: "/dashboard/culture-owl-promotion/managed-campaign", label: "Build a Managed Promotional Campaign", icon: Sparkles },
 ] as const;
 
 export default function CultureOwlPromotionPage() {

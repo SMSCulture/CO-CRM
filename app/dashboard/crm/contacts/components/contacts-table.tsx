@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { TagPill } from "./tag-pill";
@@ -42,10 +43,12 @@ export function ContactsTable({ contacts }: ContactsTableProps) {
                 <Checkbox />
               </TableCell>
               <TableCell>
-                <p className="font-medium text-foreground">
-                  {c.firstName} {c.lastName}
-                </p>
-                <p className="text-xs text-muted-foreground">{c.email}</p>
+                <Link href={`/dashboard/crm/contacts/${c.id}`} className="block hover:underline">
+                  <p className="font-medium text-foreground">
+                    {c.firstName} {c.lastName}
+                  </p>
+                  <p className="text-xs text-muted-foreground">{c.email}</p>
+                </Link>
               </TableCell>
               <TableCell>
                 <div className="flex flex-wrap gap-1.5">
