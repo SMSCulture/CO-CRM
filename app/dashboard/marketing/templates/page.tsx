@@ -1,4 +1,4 @@
-import { Card, CardContent } from "@/components/ui/card";
+import { EmailTemplateBuilder } from "./components/email-template-builder";
 
 export default function TemplatesPage() {
   return (
@@ -9,9 +9,7 @@ export default function TemplatesPage() {
           Reusable email templates for Your Marketing campaigns — sent to your own contacts.
         </p>
       </div>
-      <Card className="rounded-xl border-border border-dashed">
-        <CardContent className="p-10 text-center text-sm text-muted-foreground">Not built yet.</CardContent>
-      </Card>
+      <EmailTemplateBuilder />
     </div>
   );
 }
