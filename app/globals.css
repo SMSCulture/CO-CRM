@@ -88,3 +88,8 @@ body.automation-editor-fullscreen [data-dashboard-sidebar],
 body.automation-editor-fullscreen [data-dashboard-topbar] { display: none; }
 body.automation-editor-fullscreen [data-dashboard-main] { max-width: none; padding: 0; }
 body.automation-editor-fullscreen [data-dashboard-shell] { min-width: 0; width: 100%; }
+
+/* Custom automation nodes have deterministic card dimensions; keep them visible after React Flow measurement. */
+.automation-editor-fullscreen .react-flow__node-workflow {
+  visibility: visible !important;
+}
