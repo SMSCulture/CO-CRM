@@ -1,2 +1,2 @@
-import { EmailTemplateBuilder } from './components/email-template-builder';
-export default function TemplatesPage() { return <div className="space-y-5"><div><p className="text-xs font-bold uppercase tracking-[0.18em] text-co-blue">Your Marketing</p><h2 className="mt-1 text-3xl font-bold tracking-tight text-foreground">Email templates</h2><p className="mt-1 text-muted-foreground">Build reusable emails for campaigns sent to your organization&apos;s contacts.</p></div><EmailTemplateBuilder /></div>; }
+import { EasyEmailBuilder } from './components/easy-email-builder';
+export default function TemplatesPage() { return <EasyEmailBuilder />; }
