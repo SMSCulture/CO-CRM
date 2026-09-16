@@ -37,7 +37,7 @@ Audited September 16, 2026. Baseline is the last pre-rebuild main commit, `51279
 
 | Package(s) | Purpose | Used now? | Recommendation |
 |---|---|---:|---|
-| `easy-email-core`, `easy-email-editor`, `easy-email-extensions`, `mjml-browser` | Full drag-and-drop MJML email editor | No. The pre-rebuild code had a `/marketing/easy-email-test` smoke-test route; the rebuild removed the route and packages. | **Trial, don't silently drop.** It offered real drag blocks and source view, but duplicated the Waypoint model and added a large second editor stack. Restore it only on an internal comparison route or Storybook, test React 19 stability/export fidelity, then choose one editor model. Do not ship both to users. |
+| `easy-email-core`, `easy-email-editor`, `easy-email-extensions`, `mjml-browser` | Full drag-and-drop MJML email editor | Live trial completed and rolled back. Easy Email 4.17.1 calls ReactDOM `findDOMNode`, removed in React 19, so the editor crashes at runtime. | **Do not ship this version.** Reassess only if a maintained React 19 release appears or as an isolated React 18 editor app. Use Waypoint + dnd-kit now. |
 | `@dittofeed/sdk-web` | Dittofeed event/marketing SDK | No code usage found in baseline or current app | **Assess with backend architecture.** Keep only if CultureOwl will send browser-side events to Dittofeed; otherwise remove and integrate server-side through the backend instead. |
 
 ### Likely drop after dependency verification

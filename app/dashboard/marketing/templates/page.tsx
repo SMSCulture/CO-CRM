@@ -1,2 +1,2 @@
-import { EasyEmailBuilder } from './components/easy-email-builder';
-export default function TemplatesPage() { return <EasyEmailBuilder />; }
+import { EmailTemplateBuilder } from './components/email-template-builder';
+export default function TemplatesPage() { return <EmailTemplateBuilder />; }
