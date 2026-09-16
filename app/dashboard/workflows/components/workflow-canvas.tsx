@@ -80,16 +80,18 @@ export function WorkflowCanvas({ workflow, focusNodeId, onFocusHandled, onUpdate
     onConnect({ from: connection.source, to: connection.target, branch });
   }, [onConnect]);
 
-  const handleAdd = (item: PaletteItem) => {
-    const count = workflow.nodes.length;
-    const id = onAddNode({ ...item, config: {}, position: { x: 260 + (count % 3) * 260, y: 170 + Math.floor(count / 3) * 160 } });
+  const addAt = (item: PaletteItem, position?: {x:number;y:number}) => {
+    const count=workflow.nodes.length;
+    const id=onAddNode({...item,config:{},position:position??{x:260+(count%3)*260,y:170+Math.floor(count/3)*160}});
     setSelectedId(id);
   };
+  const handleAdd=(item:PaletteItem)=>addAt(item);
+  const handleDrop=(event:React.DragEvent<HTMLDivElement>)=>{event.preventDefault();try{const item=JSON.parse(event.dataTransfer.getData('application/cultureowl-step')) as PaletteItem;const bounds=event.currentTarget.getBoundingClientRect();addAt(item,{x:event.clientX-bounds.left-110,y:event.clientY-bounds.top-40});}catch{return;}};
 
   return (
     <div className="flex h-[calc(100vh-16rem)] min-h-[640px] overflow-hidden rounded-xl border border-border bg-[#f7f5f2]">
       <WorkflowPalette onAdd={handleAdd} />
-      <div className="min-w-0 flex-1">
+      <div className="min-w-0 flex-1" onDragOver={event=>event.preventDefault()} onDrop={handleDrop}>
         <ReactFlow
           nodes={nodes}
           edges={edges}

@@ -37,6 +37,9 @@ export function WorkflowConfigSheet({ node, open, onOpenChange, onChange, onDele
           {node.type === 'action' && node.subtype === 'send_email' && (
             <div className="space-y-2"><Label>Email template</Label><Select value={String(node.config.templateId ?? '')} onValueChange={(value) => setConfig('templateId', value)}><SelectTrigger><SelectValue placeholder="Choose a template" /></SelectTrigger><SelectContent>{SAMPLE_TEMPLATES.map((template) => <SelectItem key={template.id} value={template.id}>{template.label}</SelectItem>)}</SelectContent></Select></div>
           )}
+          {node.type === 'action' && ['instagram_post','facebook_post','tiktok_post'].includes(node.subtype) && (
+            <div className="space-y-4 rounded-lg border bg-slate-50 p-4"><div className="space-y-2"><Label>Organization account</Label><Select disabled><SelectTrigger><SelectValue placeholder="Connect and select an account"/></SelectTrigger><SelectContent><SelectItem value="pending">Connection required</SelectItem></SelectContent></Select></div><div className="space-y-2"><Label>Event source</Label><Select value={String(node.config.eventSource??'current')} onValueChange={value=>setConfig('eventSource',value)}><SelectTrigger><SelectValue/></SelectTrigger><SelectContent><SelectItem value="current">Workflow event</SelectItem><SelectItem value="choose">Choose event</SelectItem></SelectContent></Select></div><p className="text-xs text-muted-foreground">The organization owns the account. Publishing stays off until OAuth, asset selection and provider approval are live.</p></div>
+          )}
           {node.type === 'wait' && (
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-2"><Label htmlFor="wait-duration">Duration</Label><Input id="wait-duration" min={1} type="number" value={String(node.config.duration ?? '')} onChange={(event) => setConfig('duration', Number(event.target.value))} /></div>
