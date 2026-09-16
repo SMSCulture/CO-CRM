@@ -1,5 +1,5 @@
 import { Handle, Position, type NodeProps } from '@xyflow/react';
-import { Bell, Check, CircleStop, Clock3, Flag, GitBranch, Mail, Play, Tags, UserRoundCog } from 'lucide-react';
+import { Bell, Check, CircleStop, Clock3, Facebook, Flag, GitBranch, Instagram, Mail, Megaphone, Play, Tags, UserRoundCog } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { WorkflowNode } from '@/store/workflow-builder-store';
 
@@ -19,6 +19,12 @@ const subtypeIcons: Record<string, typeof Play> = {
   remove_tag: Tags,
   update_field: UserRoundCog,
   notify_staff: Bell,
+  instagram: Instagram,
+  facebook: Facebook,
+  tiktok: Megaphone,
+  instagram_post: Instagram,
+  facebook_post: Facebook,
+  tiktok_post: Megaphone,
 };
 
 export function WorkflowCanvasNode({ data, selected }: NodeProps) {
