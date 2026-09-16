@@ -17,7 +17,9 @@ import '@xyflow/react/dist/style.css';
 import type { Workflow, WorkflowBranch, WorkflowNode } from '@/store/workflow-builder-store';
 import { WorkflowCanvasNode } from './workflow-node';
 import { WorkflowConfigSheet } from './workflow-config-sheet';
-import { WorkflowPalette, type PaletteItem } from './workflow-palette';
+import { WorkflowNodePicker, type PaletteItem } from './workflow-palette';
+import { Button } from '@/components/ui/button';
+import { Plus } from 'lucide-react';
 
 interface Props {
   workflow: Workflow;
@@ -34,6 +36,7 @@ const nodeTypes = { workflow: WorkflowCanvasNode };
 
 export function WorkflowCanvas({ workflow, focusNodeId, onFocusHandled, onUpdateNode, onAddNode, onRemoveNode, onConnect, onRemoveEdge }: Props) {
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [pickerOpen, setPickerOpen] = useState(false);
   const [localPositions, setLocalPositions] = useState<Record<string, WorkflowNode['position']>>({});
   const selectedNode = workflow.nodes.find((node) => node.id === selectedId) ?? null;
 
@@ -86,12 +89,11 @@ export function WorkflowCanvas({ workflow, focusNodeId, onFocusHandled, onUpdate
     setSelectedId(id);
   };
   const handleAdd=(item:PaletteItem)=>addAt(item);
-  const handleDrop=(event:React.DragEvent<HTMLDivElement>)=>{event.preventDefault();try{const item=JSON.parse(event.dataTransfer.getData('application/cultureowl-step')) as PaletteItem;const bounds=event.currentTarget.getBoundingClientRect();addAt(item,{x:event.clientX-bounds.left-110,y:event.clientY-bounds.top-40});}catch{return;}};
 
   return (
-    <div className="flex h-[calc(100vh-16rem)] min-h-[640px] overflow-hidden rounded-xl border border-border bg-[#f7f5f2]">
-      <WorkflowPalette onAdd={handleAdd} />
-      <div className="min-w-0 flex-1" onDragOver={event=>event.preventDefault()} onDrop={handleDrop}>
+    <div className="relative flex h-[calc(100vh-16rem)] min-h-[640px] overflow-hidden rounded-xl border border-border bg-[#f7f5f2]">
+      <div className="absolute right-4 top-4 z-10 flex items-center gap-2 rounded-lg border bg-white p-2 shadow-sm"><span className="hidden text-xs text-muted-foreground sm:inline">Build on the canvas</span><Button size="sm" className="gap-2" onClick={()=>setPickerOpen(true)}><Plus className="h-4 w-4"/>Add node</Button></div>
+      <div className="min-w-0 flex-1">
         <ReactFlow
           nodes={nodes}
           edges={edges}
@@ -110,6 +112,7 @@ export function WorkflowCanvas({ workflow, focusNodeId, onFocusHandled, onUpdate
           <Controls showInteractive={false} />
         </ReactFlow>
       </div>
+      <WorkflowNodePicker open={pickerOpen} onOpenChange={setPickerOpen} onAdd={handleAdd} />
       <WorkflowConfigSheet
         node={selectedNode}
         open={Boolean(selectedNode)}
