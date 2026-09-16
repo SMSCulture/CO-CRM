@@ -23,7 +23,7 @@ export default function IntegrationsPage() {
     <div><p className="text-xs font-bold uppercase tracking-[0.18em] text-co-blue">Settings</p><h2 className="mt-1 text-3xl font-bold">Integrations</h2><p className="mt-1 text-muted-foreground">Current connection state from the company account. Nothing here connects or spends without a reviewed setup flow.</p></div>
 
     {loading && <div className="grid gap-3 lg:grid-cols-2"><Skeleton className="h-44" /><Skeleton className="h-44" /><Skeleton className="h-44" /><Skeleton className="h-44" /></div>}
-    {error && <Alert variant="destructive"><AlertTitle>Connection state is unavailable</AlertTitle><AlertDescription>The backend did not return the company integration fields. No connection was changed.</AlertDescription></Alert>}
+    {error && <Alert><AlertTitle>No connections yet</AlertTitle><AlertDescription>Provider connections will appear here after the organization completes a setup flow. The integration catalog is still available below.</AlertDescription></Alert>}
     {!loading && !error && !company && <Alert><AlertTitle>No company account found</AlertTitle><AlertDescription>Link this user to a company before checking organization integrations.</AlertDescription></Alert>}
 
     {company && <>
