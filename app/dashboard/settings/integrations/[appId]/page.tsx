@@ -76,7 +76,7 @@ export default function IntegrationDetailPage() {
         </div>
 
         <div className="px-6 pb-6">
-          <div className="relative aspect-video overflow-hidden rounded-lg bg-muted">
+          <div className="relative h-56 overflow-hidden rounded-lg bg-muted">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={images[imageIndex]} alt={`${app.name} screenshot ${imageIndex + 1}`} className="h-full w-full object-cover" />
           </div>
