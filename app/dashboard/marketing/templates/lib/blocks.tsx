@@ -75,7 +75,7 @@ export function DocumentBlock({ id }: { id: string }) {
     case 'Html':
       return <Html {...(block.data as Record<string, unknown>)} />;
     case 'Image':
-      return <Image {...(block.data as Record<string, unknown>)} />;
+      return <Image alt="" {...(block.data as Record<string, unknown>)} />;
     case 'Spacer':
       return <Spacer {...(block.data as Record<string, unknown>)} />;
     case 'Text':

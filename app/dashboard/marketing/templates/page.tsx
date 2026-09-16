@@ -1,15 +1,2 @@
-import { EmailTemplateBuilder } from "./components/email-template-builder";
-
-export default function TemplatesPage() {
-  return (
-    <div className="space-y-6">
-      <div>
-        <h2 className="text-3xl font-bold text-foreground">Templates</h2>
-        <p className="mt-1 text-muted-foreground">
-          Reusable email templates for Your Marketing campaigns — sent to your own contacts.
-        </p>
-      </div>
-      <EmailTemplateBuilder />
-    </div>
-  );
-}
+import { EmailTemplateBuilder } from './components/email-template-builder';
+export default function TemplatesPage() { return <div className="space-y-5"><div><p className="text-xs font-bold uppercase tracking-[0.18em] text-co-blue">Your Marketing</p><h2 className="mt-1 text-3xl font-bold tracking-tight text-foreground">Email templates</h2><p className="mt-1 text-muted-foreground">Build reusable emails for campaigns sent to your organization&apos;s contacts.</p></div><EmailTemplateBuilder /></div>; }
