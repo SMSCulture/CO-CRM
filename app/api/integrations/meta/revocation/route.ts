@@ -1,0 +1,2 @@
+import {NextRequest,NextResponse} from 'next/server';
+export async function POST(request:NextRequest){const signed=request.headers.get('x-hub-signature-256');if(!signed)return NextResponse.json({error:'Missing webhook signature'},{status:401});return NextResponse.json({accepted:true,persisted:false,note:'Signature verification and tenant lookup require the persistent integration store deployment.'},{status:202})}

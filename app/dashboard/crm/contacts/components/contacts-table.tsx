@@ -44,12 +44,13 @@ export function ContactsTable({ contacts }: ContactsTableProps) {
       {selected.size > 0 && <div className="flex items-center gap-2"><Button size="sm" variant="outline">Add tag</Button><Button size="sm" variant="outline">Add to segment</Button></div>}
     </div>
     <div className="max-w-full overflow-x-auto">
-      <Table className="min-w-[1160px]">
+      <Table className="min-w-[1240px]">
         <TableHeader className="sticky top-0 z-10 bg-slate-50/95 backdrop-blur dark:bg-slate-950/95">
           <TableRow className="hover:bg-transparent">
             <TableHead className="w-12 pl-4"><Checkbox checked={allSelected} onCheckedChange={toggleAll} aria-label="Select all contacts" /></TableHead>
             <TableHead className="w-[260px]">Contact</TableHead>
             <TableHead>Status</TableHead>
+            <TableHead>Source</TableHead>
             <TableHead>Tags</TableHead>
             <TableHead>Location</TableHead>
             <TableHead><SortButton label="Lifetime spend" active={sort.key === 'totalSpend'} direction={sort.direction} onClick={() => toggleSort('totalSpend')} /></TableHead>
@@ -64,6 +65,7 @@ export function ContactsTable({ contacts }: ContactsTableProps) {
             <TableCell className={cn('relative pl-4', isSelected && 'before:absolute before:inset-y-0 before:left-0 before:w-0.5 before:bg-co-blue')}><Checkbox checked={isSelected} onCheckedChange={() => toggleOne(contact.id)} aria-label={`Select ${contact.firstName} ${contact.lastName}`} /></TableCell>
             <TableCell><Link href={`/dashboard/crm/contacts/${contact.id}`} className="flex items-center gap-3 rounded-md outline-none focus-visible:ring-2 focus-visible:ring-co-blue"><span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-co-blue/20 to-co-blue/5 text-xs font-bold text-co-blue-hover">{contact.firstName[0]}{contact.lastName[0]}</span><span className="min-w-0"><span className="block truncate text-sm font-semibold text-foreground group-hover:text-co-blue-hover">{contact.firstName} {contact.lastName}</span><span className="block truncate text-xs text-muted-foreground">{contact.email}</span></span></Link></TableCell>
             <TableCell><Badge variant="secondary" className="whitespace-nowrap font-medium">{contact.activityStatus}</Badge></TableCell>
+            <TableCell><span className="whitespace-nowrap text-xs font-medium capitalize text-muted-foreground">{contact.source.replace("-", " ")}</span></TableCell>
             <TableCell><div className="flex max-w-44 items-center gap-1.5">{contact.tags.slice(0, 2).map((tag) => <TagPill key={tag} tag={tag} />)}{contact.tags.length > 2 && <span className="text-xs text-muted-foreground">+{contact.tags.length - 2}</span>}{contact.tags.length === 0 && <span className="text-xs text-muted-foreground">No tags</span>}</div></TableCell>
             <TableCell><span className="text-sm text-foreground">{contact.city}</span><span className="block text-xs text-muted-foreground">{contact.zip}</span></TableCell>
             <TableCell className="text-right font-semibold tabular-nums">${contact.totalSpend.toLocaleString()}</TableCell>
