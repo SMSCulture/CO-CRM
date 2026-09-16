@@ -1,9 +1,13 @@
 'use client';
 
 import { useQuery } from '@apollo/client';
-import { BadgeDollarSign, DatabaseZap, Mail, Megaphone } from 'lucide-react';
+import { useMemo, useState } from 'react';
+import { BadgeDollarSign, DatabaseZap, Mail, Megaphone, Search } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Input } from '@/components/ui/input';
+import { INTEGRATION_APPS, INTEGRATION_CATEGORY_LABELS } from '@/lib/data/integrations';
+import { AppCard } from './components/app-card';
 import { GET_INTEGRATION_STATUS } from '@/lib/graphql/integration-status';
 import { ConnectionCard } from './components/connection-card';
 
@@ -12,6 +16,8 @@ interface CompanyIntegrationState { id: string; name: string; stripeId?: string 
 export default function IntegrationsPage() {
   const { data, loading, error } = useQuery<{ myCompanies: CompanyIntegrationState[] }>(GET_INTEGRATION_STATUS);
   const company = data?.myCompanies?.[0];
+  const [query, setQuery] = useState('');
+  const apps = useMemo(() => INTEGRATION_APPS.filter((app) => `${app.name} ${app.description}`.toLowerCase().includes(query.toLowerCase())), [query]);
 
   return <div className="space-y-6">
     <div><p className="text-xs font-bold uppercase tracking-[0.18em] text-co-blue">Settings</p><h2 className="mt-1 text-3xl font-bold">Integrations</h2><p className="mt-1 text-muted-foreground">Current connection state from the company account. Nothing here connects or spends without a reviewed setup flow.</p></div>
@@ -30,5 +36,6 @@ export default function IntegrationsPage() {
       </div>
       <Alert><AlertTitle>Connection controls still need backend contracts</AlertTitle><AlertDescription>OAuth setup, token health, last sync, field mapping, disconnect and error recovery are not exposed by the current API. The statuses above only use verified company fields and module availability.</AlertDescription></Alert>
     </>}
+    <section className="space-y-4"><div className="flex flex-wrap items-end justify-between gap-3"><div><h3 className="text-xl font-bold">Integration catalog</h3><p className="text-sm text-muted-foreground">Choose a provider to review capabilities and the setup fields it will need.</p></div><div className="relative w-full sm:w-72"><Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"/><Input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search integrations" className="pl-9"/></div></div>{Object.entries(INTEGRATION_CATEGORY_LABELS).map(([category,label]) => { const matches=apps.filter((app)=>app.category===category); return matches.length ? <div key={category}><p className="mb-2 text-xs font-bold uppercase tracking-wider text-muted-foreground">{label}</p><div className="grid gap-3 md:grid-cols-2">{matches.map((app)=><AppCard key={app.id} app={app}/>)}</div></div> : null; })}</section>
   </div>;
 }

@@ -4,6 +4,9 @@ import { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { ChevronLeft, ChevronRight, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
 import { INTEGRATION_APPS, INTEGRATION_CATEGORY_LABELS } from "@/lib/data/integrations";
 import { AppIcon } from "../components/app-icon";
 
@@ -32,6 +35,7 @@ export default function IntegrationDetailPage() {
   const params = useParams<{ appId: string }>();
   const router = useRouter();
   const [imageIndex, setImageIndex] = useState(0);
+  const [setupOpen, setSetupOpen] = useState(false);
 
   const app = INTEGRATION_APPS.find((a) => a.id === params.appId);
 
@@ -66,7 +70,7 @@ export default function IntegrationDetailPage() {
               <span className="text-sm font-medium text-co-blue">{INTEGRATION_CATEGORY_LABELS[app.category]}</span>
               <h1 className="font-display text-3xl font-bold text-foreground">{app.name}</h1>
               <p className="mb-4 mt-1 text-foreground">{app.description}</p>
-              <Button>Get app info</Button>
+              <Button onClick={() => setSetupOpen((open) => !open)}>{setupOpen ? "Close setup" : "Set up integration"}</Button>
             </div>
           </div>
         </div>
@@ -89,6 +93,8 @@ export default function IntegrationDetailPage() {
           </div>
         </div>
       </div>
+
+      {setupOpen && <section className="rounded-xl border bg-white p-6"><div className="flex flex-wrap items-start justify-between gap-4"><div><h2 className="text-xl font-bold">Set up {app.name}</h2><p className="mt-1 text-sm text-muted-foreground">UI preparation only. Connecting requires a reviewed OAuth callback and backend token vault.</p></div><span className="rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold text-amber-900">Not connected</span></div><div className="mt-5 grid gap-4 md:grid-cols-2"><div className="space-y-1.5"><Label>Connection name</Label><Input defaultValue={`${app.name} - CultureOwl`}/></div><div className="space-y-1.5"><Label>Account ID</Label><Input placeholder="Returned after OAuth" disabled/></div></div><div className="mt-5 space-y-3 rounded-lg bg-slate-50 p-4"><p className="text-sm font-semibold">Sync controls</p><label className="flex items-center justify-between gap-4 text-sm">Import contacts and activity<Switch defaultChecked/></label><label className="flex items-center justify-between gap-4 text-sm">Export approved audiences<Switch/></label><label className="flex items-center justify-between gap-4 text-sm">Conversion reporting<Switch defaultChecked/></label></div><div className="mt-5 flex justify-end gap-2"><Button variant="outline" onClick={() => setSetupOpen(false)}>Cancel</Button><Button disabled>Connect with {app.name}</Button></div><p className="mt-3 text-xs text-muted-foreground">Connect remains disabled until OAuth scopes, callback URL, token health, field mapping, disconnect and error recovery are implemented server-side.</p></section>}
 
       <section>
         <h2 className="mb-4 text-2xl font-semibold text-foreground">Features</h2>
