@@ -17,9 +17,10 @@ import '@xyflow/react/dist/style.css';
 import type { Workflow, WorkflowBranch, WorkflowNode } from '@/store/workflow-builder-store';
 import { WorkflowCanvasNode } from './workflow-node';
 import { WorkflowConfigSheet } from './workflow-config-sheet';
-import { WorkflowNodePicker, WorkflowPalettePanel, type PaletteItem } from './workflow-palette';
+import { TriggerLeftPanel } from './trigger-left-panel';
+import { WorkflowNodePicker, type PaletteItem } from './workflow-palette';
 import { Button } from '@/components/ui/button';
-import { Plus } from 'lucide-react';
+import { PanelLeft, Plus } from 'lucide-react';
 
 interface Props {
   workflow: Workflow;
@@ -37,8 +38,10 @@ const nodeTypes = { workflow: WorkflowCanvasNode };
 export function WorkflowCanvas({ workflow, focusNodeId, onFocusHandled, onUpdateNode, onAddNode, onRemoveNode, onConnect, onRemoveEdge }: Props) {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [pickerOpen, setPickerOpen] = useState(false);
+  const [mobileRailOpen,setMobileRailOpen]=useState(false);
   const [localPositions, setLocalPositions] = useState<Record<string, WorkflowNode['position']>>({});
   const selectedNode = workflow.nodes.find((node) => node.id === selectedId) ?? null;
+  const triggers=workflow.nodes.filter(node=>node.type==='trigger');
 
   useEffect(() => {
     if (!focusNodeId || !workflow.nodes.some((node) => node.id === focusNodeId)) return;
@@ -92,7 +95,7 @@ export function WorkflowCanvas({ workflow, focusNodeId, onFocusHandled, onUpdate
 
   return (
     <div className="relative flex h-[calc(100vh-16rem)] min-h-[640px] overflow-hidden rounded-xl border border-border bg-[#f7f5f2]">
-      <aside className="z-10 hidden w-[280px] shrink-0 border-r bg-white p-3 lg:block"><div className="mb-3"><p className="text-sm font-semibold">Add nodes</p><p className="text-xs text-muted-foreground">Pick a node, then configure it.</p></div><WorkflowPalettePanel compact onAdd={handleAdd}/></aside><Button size="sm" className="absolute left-3 top-3 z-20 h-8 gap-1.5 rounded-full px-3 shadow-md lg:left-[292px]" onClick={()=>setPickerOpen(true)}><Plus className="h-3.5 w-3.5"/>Add node</Button>
+      {mobileRailOpen&&<button className="absolute inset-0 z-20 bg-black/25 lg:hidden" aria-label="Close trigger panel" onClick={()=>setMobileRailOpen(false)}/>}<aside className={`${mobileRailOpen?'absolute inset-y-0 left-0 z-30 flex w-[min(88vw,360px)]':'hidden'} shrink-0 border-r bg-white p-4 shadow-xl lg:relative lg:z-10 lg:flex lg:w-[320px] lg:shadow-none`}><TriggerLeftPanel triggers={triggers} selected={selectedNode} onSelect={id=>setSelectedId(id||null)} onAdd={handleAdd} onChange={patch=>selectedNode&&onUpdateNode(selectedNode.id,patch)} onDelete={()=>{if(selectedNode){onRemoveNode(selectedNode.id);setSelectedId(null)}}} onClose={()=>setMobileRailOpen(false)}/></aside><Button size="sm" variant="outline" className="absolute left-3 top-3 z-20 h-8 gap-1.5 rounded-full bg-white px-3 shadow-md lg:hidden" onClick={()=>setMobileRailOpen(true)}><PanelLeft className="h-3.5 w-3.5"/>Triggers</Button><Button size="sm" className="absolute left-[112px] top-3 z-20 h-8 gap-1.5 rounded-full px-3 shadow-md lg:left-[332px]" onClick={()=>setPickerOpen(true)}><Plus className="h-3.5 w-3.5"/>Add node</Button>
       <div className="min-w-0 flex-1">
         <ReactFlow
           nodes={nodes}
@@ -115,7 +118,7 @@ export function WorkflowCanvas({ workflow, focusNodeId, onFocusHandled, onUpdate
       <WorkflowNodePicker open={pickerOpen} onOpenChange={setPickerOpen} onAdd={handleAdd} />
       <WorkflowConfigSheet
         node={selectedNode}
-        open={Boolean(selectedNode)}
+        open={Boolean(selectedNode&&selectedNode.type!=='trigger')}
         onOpenChange={(open) => { if (!open) setSelectedId(null); }}
         onChange={(patch) => { if (selectedNode) onUpdateNode(selectedNode.id, patch); }}
         onDelete={() => { if (selectedNode) { onRemoveNode(selectedNode.id); setSelectedId(null); } }}

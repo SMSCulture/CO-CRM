@@ -104,7 +104,7 @@ export function validateWorkflow(workflow: Workflow): WorkflowValidationIssue[] 
   });
 
   const triggers = workflow.nodes.filter((node) => node.type === 'trigger');
-  if (triggers.length !== 1) issues.push({ message: 'A workflow needs exactly one trigger.' });
+  if (triggers.length < 1) issues.push({ message: 'An automation needs at least one trigger.' });
 
   workflow.nodes.forEach((node) => {
     if (node.type !== 'trigger' && !incoming.get(node.id)) {
