@@ -46,13 +46,13 @@ export default function WorkflowBuilderPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <Button variant="ghost" className="gap-2" onClick={() => router.push('/dashboard/workflows')}><ArrowLeft className="h-4 w-4" />Back to Workflows</Button>
         <Button className="gap-2" onClick={handleSave} disabled={saving}><Save className="h-4 w-4" />{saving ? 'Saving...' : 'Save workflow'}</Button>
       </div>
 
-      <div className="grid gap-4 rounded-2xl border border-border bg-white p-5 lg:grid-cols-[1fr_1fr_auto] lg:items-end">
+      <div className="grid gap-3 rounded-xl border bg-white p-4 lg:grid-cols-[1fr_1fr_auto] lg:items-end">
         <div className="space-y-1.5"><Label htmlFor="workflow-name">Name</Label><Input id="workflow-name" value={workflow.name} onChange={(event) => updateWorkflow(workflow.id, { name: event.target.value })} /></div>
         <div className="space-y-1.5"><Label htmlFor="workflow-description">Description</Label><Textarea id="workflow-description" rows={1} value={workflow.description} onChange={(event) => updateWorkflow(workflow.id, { description: event.target.value })} /></div>
         <div className="flex h-10 items-center gap-2"><Switch checked={workflow.isActive} onCheckedChange={handleToggle} id="workflow-active" /><Label htmlFor="workflow-active">{workflow.isActive ? 'Active' : 'Draft'}</Label></div>

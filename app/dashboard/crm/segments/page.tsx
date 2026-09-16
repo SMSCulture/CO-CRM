@@ -24,7 +24,7 @@ export default function SegmentsPage() {
         </Button>
       </div>
 
-      <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
+      <div className="overflow-hidden rounded-xl border bg-white">
         {segments.map((segment) => (
           <SegmentCard key={segment.id} segment={segment} />
         ))}

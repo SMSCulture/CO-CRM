@@ -1,19 +1,11 @@
-import { Bell, CircleStop, Clock3, Flag, GitBranch, Mail, Tags, UserRoundCog } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Bell, ChevronDown, CircleStop, Clock3, Flag, GitBranch, Mail, Plus, Search, Tags, UserRoundCog } from 'lucide-react';
+import { Input } from '@/components/ui/input';
 import type { WorkflowNodeType } from '@/store/workflow-builder-store';
 
 export interface PaletteItem { type: WorkflowNodeType; subtype: string; label: string }
-const ITEMS: Array<PaletteItem & { icon: typeof Mail }> = [
-  { type: 'action', subtype: 'send_email', label: 'Send email', icon: Mail },
-  { type: 'action', subtype: 'add_tag', label: 'Add tag', icon: Tags },
-  { type: 'action', subtype: 'update_field', label: 'Update field', icon: UserRoundCog },
-  { type: 'action', subtype: 'notify_staff', label: 'Notify staff', icon: Bell },
-  { type: 'condition', subtype: 'contact_filter', label: 'Condition', icon: GitBranch },
-  { type: 'wait', subtype: 'fixed_delay', label: 'Wait', icon: Clock3 },
-  { type: 'goal', subtype: 'conversion', label: 'Goal', icon: Flag },
-  { type: 'exit', subtype: 'complete', label: 'Exit', icon: CircleStop },
-];
-
-export function WorkflowPalette({ onAdd }: { onAdd: (item: PaletteItem) => void }) {
-  return <aside className="w-52 shrink-0 border-r border-border bg-white p-3"><p className="mb-2 text-xs font-bold uppercase tracking-wider text-muted-foreground">Add a node</p><div className="space-y-1">{ITEMS.map((item) => { const Icon = item.icon; return <Button key={`${item.type}-${item.subtype}`} variant="ghost" className="w-full justify-start gap-2" onClick={() => onAdd(item)}><Icon className="h-4 w-4" />{item.label}</Button>; })}</div><p className="mt-4 text-xs leading-5 text-muted-foreground">Click a node to add it, then connect its handles on the canvas.</p></aside>;
-}
+const GROUPS = [
+  { label:'Messages', items:[{ type:'action',subtype:'send_email',label:'Send email',icon:Mail},{type:'action',subtype:'notify_staff',label:'Notify staff',icon:Bell}] },
+  { label:'Data', items:[{type:'action',subtype:'add_tag',label:'Add tag',icon:Tags},{type:'action',subtype:'update_field',label:'Update field',icon:UserRoundCog}] },
+  { label:'Logic', items:[{type:'condition',subtype:'contact_filter',label:'If / else',icon:GitBranch},{type:'wait',subtype:'fixed_delay',label:'Wait',icon:Clock3},{type:'goal',subtype:'conversion',label:'Goal',icon:Flag},{type:'exit',subtype:'complete',label:'Exit',icon:CircleStop}] },
+] satisfies Array<{label:string;items:Array<PaletteItem & {icon:typeof Mail}>}>;
+export function WorkflowPalette({ onAdd }: { onAdd: (item: PaletteItem) => void }) { return <aside className="w-64 shrink-0 border-r bg-white"><div className="border-b p-4"><p className="text-sm font-semibold">Nodes</p><p className="mt-1 text-xs text-muted-foreground">Click to add, then connect.</p><div className="relative mt-3"><Search className="absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground"/><Input placeholder="Search nodes" className="h-9 pl-8 text-xs"/></div></div><div className="space-y-5 p-3">{GROUPS.map(group=><section key={group.label}><p className="mb-2 flex items-center justify-between px-1 text-[11px] font-bold uppercase tracking-wider text-muted-foreground">{group.label}<ChevronDown className="h-3 w-3"/></p><div className="grid grid-cols-2 gap-2">{group.items.map(item=>{const Icon=item.icon;return <button key={item.subtype} onClick={()=>onAdd(item)} className="group flex min-h-20 flex-col items-start justify-between rounded-xl border bg-white p-3 text-left text-xs font-semibold shadow-sm hover:border-co-blue hover:bg-blue-50/30"><span className="flex w-full justify-between"><Icon className="h-4 w-4 text-co-blue"/><Plus className="h-3 w-3 opacity-0 group-hover:opacity-100"/></span>{item.label}</button>})}</div></section>)}</div></aside>; }

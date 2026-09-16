@@ -78,7 +78,7 @@ export function WorkflowCanvas({ workflow, onUpdateNode, onAddNode, onRemoveNode
   };
 
   return (
-    <div className="flex h-[680px] overflow-hidden rounded-2xl border border-border bg-slate-50">
+    <div className="flex h-[calc(100vh-16rem)] min-h-[640px] overflow-hidden rounded-xl border border-border bg-slate-50">
       <WorkflowPalette onAdd={handleAdd} />
       <div className="min-w-0 flex-1">
         <ReactFlow
@@ -91,11 +91,11 @@ export function WorkflowCanvas({ workflow, onUpdateNode, onAddNode, onRemoveNode
           onNodeClick={(_, node) => setSelectedId(node.id)}
           onPaneClick={() => setSelectedId(null)}
           fitView
-          fitViewOptions={{ padding: 0.25 }}
+          fitViewOptions={{ padding: 0.18, duration: 0 }}
           deleteKeyCode={['Backspace', 'Delete']}
         >
           <Background gap={18} size={1} />
-          <MiniMap pannable zoomable nodeStrokeWidth={3} />
+          <MiniMap pannable zoomable nodeStrokeWidth={3} className="!rounded-lg !border !bg-white" />
           <Controls showInteractive={false} />
         </ReactFlow>
       </div>

@@ -1,23 +1,3 @@
 import Link from "next/link";
-import { ChevronRight } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
 import type { Segment } from "../hooks/use-segments-data";
-
-export function SegmentCard({ segment }: { segment: Segment }) {
-  return (
-    <Link href={`/dashboard/segments/${segment.id}`}>
-      <Card className="rounded-xl border-border transition-colors hover:border-co-blue/40">
-        <CardContent className="flex items-center justify-between p-5">
-          <div>
-            <p className="font-semibold text-foreground">{segment.name}</p>
-            <p className="mt-1 text-sm text-muted-foreground">{segment.description}</p>
-            <p className="mt-2 text-xs text-muted-foreground">
-              {segment.contactCount.toLocaleString()} contacts · Updated {segment.lastRecalculated}
-            </p>
-          </div>
-          <ChevronRight className="h-5 w-5 shrink-0 text-muted-foreground" />
-        </CardContent>
-      </Card>
-    </Link>
-  );
-}
+export function SegmentCard({ segment }: { segment: Segment }) { return <Link href={`/dashboard/crm/segments/${segment.id}`} className="grid grid-cols-[minmax(220px,1fr)_120px_140px] items-center gap-4 border-b px-4 py-3 text-sm last:border-b-0 hover:bg-slate-50"><span><span className="block font-semibold">{segment.name}</span><span className="block truncate text-xs text-muted-foreground">{segment.description}</span></span><span className="text-right tabular-nums">{segment.contactCount.toLocaleString()} contacts</span><span className="text-right text-xs text-muted-foreground">Updated {segment.lastRecalculated}</span></Link>; }
