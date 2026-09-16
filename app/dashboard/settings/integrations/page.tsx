@@ -1,58 +1,34 @@
-"use client";
+'use client';
 
-import { useMemo, useState } from "react";
-import { Search } from "lucide-react";
-import { Input } from "@/components/ui/input";
-import { INTEGRATION_APPS, INTEGRATION_CATEGORY_LABELS, INTEGRATION_CATEGORY_ORDER } from "@/lib/data/integrations";
-import { AppCard } from "./components/app-card";
+import { useQuery } from '@apollo/client';
+import { BadgeDollarSign, DatabaseZap, Mail, Megaphone } from 'lucide-react';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { Skeleton } from '@/components/ui/skeleton';
+import { GET_INTEGRATION_STATUS } from '@/lib/graphql/integration-status';
+import { ConnectionCard } from './components/connection-card';
+
+interface CompanyIntegrationState { id: string; name: string; stripeId?: string | null; hubspotId?: string | null }
 
 export default function IntegrationsPage() {
-  const [search, setSearch] = useState("");
+  const { data, loading, error } = useQuery<{ myCompanies: CompanyIntegrationState[] }>(GET_INTEGRATION_STATUS);
+  const company = data?.myCompanies?.[0];
 
-  const filtered = useMemo(() => {
-    const q = search.toLowerCase();
-    return INTEGRATION_APPS.filter(
-      (app) => q === "" || app.name.toLowerCase().includes(q) || app.description.toLowerCase().includes(q)
-    );
-  }, [search]);
+  return <div className="space-y-6">
+    <div><p className="text-xs font-bold uppercase tracking-[0.18em] text-co-blue">Settings</p><h2 className="mt-1 text-3xl font-bold">Integrations</h2><p className="mt-1 text-muted-foreground">Current connection state from the company account. Nothing here connects or spends without a reviewed setup flow.</p></div>
 
-  const grouped = useMemo(() => {
-    const groups: Record<string, typeof INTEGRATION_APPS> = {};
-    for (const category of INTEGRATION_CATEGORY_ORDER) {
-      groups[category] = filtered.filter((app) => app.category === category);
-    }
-    return groups;
-  }, [filtered]);
+    {loading && <div className="grid gap-3 lg:grid-cols-2"><Skeleton className="h-44" /><Skeleton className="h-44" /><Skeleton className="h-44" /><Skeleton className="h-44" /></div>}
+    {error && <Alert variant="destructive"><AlertTitle>Connection state is unavailable</AlertTitle><AlertDescription>The backend did not return the company integration fields. No connection was changed.</AlertDescription></Alert>}
+    {!loading && !error && !company && <Alert><AlertTitle>No company account found</AlertTitle><AlertDescription>Link this user to a company before checking organization integrations.</AlertDescription></Alert>}
 
-  return (
-    <div className="space-y-6">
-      <div>
-        <h2 className="text-xl font-semibold text-foreground">Integrations</h2>
-        <p className="mt-0.5 text-sm text-muted-foreground">Connect apps to extend your marketing and CRM reach.</p>
+    {company && <>
+      <div className="flex items-center justify-between rounded-xl border border-border bg-white px-4 py-3"><div><p className="text-sm font-semibold">{company.name}</p><p className="text-xs text-muted-foreground">Primary company returned by the current account</p></div><span className="text-xs text-muted-foreground">Live account state</span></div>
+      <div className="grid gap-3 lg:grid-cols-2">
+        <ConnectionCard name="Stripe" icon={BadgeDollarSign} status={company.stripeId ? 'connected' : 'unavailable'} description="Company billing and payment customer." detail={company.stripeId ? 'A Stripe customer ID is stored for this company. Payout and tax onboarding are a separate ticketing project.' : 'No Stripe customer ID is stored for this company. This page does not create an account.'} />
+        <ConnectionCard name="HubSpot" icon={DatabaseZap} status={company.hubspotId ? 'connected' : 'unavailable'} description="Legacy external CRM link." detail={company.hubspotId ? 'A HubSpot company ID is stored. The backend bundle exposes a HubSpot sync service, but not user-facing connection controls.' : 'No HubSpot company ID is stored. CultureOwl CRM remains the target system of record.'} />
+        <ConnectionCard name="Brevo" icon={Mail} status="platform" description="CultureOwl email transport." detail="The backend includes Brevo campaign and contact services. Its provider account status is server-managed and is not exposed to company users by the current API." />
+        <ConnectionCard name="Ad platforms" icon={Megaphone} status="unavailable" description="Meta, Google and TikTok audience activation." detail="No company connection-state API is present in the supplied backend contract. These cannot be shown as connected or enabled yet." />
       </div>
-
-      <div className="relative max-w-sm">
-        <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-        <Input placeholder="Search apps" value={search} onChange={(e) => setSearch(e.target.value)} className="pl-9" />
-      </div>
-
-      <div className="space-y-8">
-        {INTEGRATION_CATEGORY_ORDER.map((category) => {
-          const apps = grouped[category];
-          if (!apps || apps.length === 0) return null;
-          return (
-            <section key={category}>
-              <h3 className="mb-3 text-sm font-semibold text-foreground">{INTEGRATION_CATEGORY_LABELS[category]}</h3>
-              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-                {apps.map((app) => (
-                  <AppCard key={app.id} app={app} />
-                ))}
-              </div>
-            </section>
-          );
-        })}
-        {filtered.length === 0 && <p className="py-8 text-center text-sm text-muted-foreground">No apps found matching your search.</p>}
-      </div>
-    </div>
-  );
+      <Alert><AlertTitle>Connection controls still need backend contracts</AlertTitle><AlertDescription>OAuth setup, token health, last sync, field mapping, disconnect and error recovery are not exposed by the current API. The statuses above only use verified company fields and module availability.</AlertDescription></Alert>
+    </>}
+  </div>;
 }
