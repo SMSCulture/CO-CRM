@@ -16,6 +16,7 @@ import { ActivityTimeline } from "../components/activity-timeline";
 import { CustomPropertyValues } from "../components/custom-property-values";
 import { MetricCard } from "../components/metric-card";
 import { EventTypeDistribution } from "../components/event-type-distribution";
+import { PatronContext } from "../components/patron-context";
 
 export default function ContactProfilePage() {
   const params = useParams<{ id: string }>();
@@ -164,6 +165,8 @@ export default function ContactProfilePage() {
           </Card>
         </div>
       </div>
+
+      <PatronContext />
 
       <Card className="rounded-xl border-border">
         <CardHeader className="pb-3">
