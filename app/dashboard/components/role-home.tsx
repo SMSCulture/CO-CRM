@@ -1,0 +1,24 @@
+'use client';
+
+import Link from 'next/link';
+import { ArrowRight, BarChart3, CalendarCheck, CheckCircle2, Mail, ShieldCheck, TrendingUp, UsersRound } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { useAuthStore } from '@/store/auth-store';
+
+type HomeRole = 'executive' | 'marketing' | 'stewardship' | 'service';
+const roleFor = (name?: string): HomeRole => name === 'SOCIAL_MANAGER' ? 'marketing' : name === 'SALES' ? 'stewardship' : name === 'CALENDAR_MEMBER' ? 'service' : 'executive';
+const views = {
+ executive: { label: 'Executive', title: 'Organization overview', description: 'Retention, audience health and the work that needs attention.', metrics: [['Active patrons','1,406','+6.4%'],['Repeat rate','52%','+3.1%'],['Campaign reach','18.2K','+8.7%'],['Tasks due','7','2 overdue']], action: ['Open board report','/dashboard/analytics'] },
+ marketing: { label: 'Marketing', title: 'Audience growth today', description: 'Find the next audience and move each signal into a safe action.', metrics: [['Audience growth','+184','This month'],['First to repeat','28%','+4.2%'],['Email eligible','1,239','88%'],['SMS eligible','604','43%']], action: ['Build campaign','/dashboard/marketing/campaigns'] },
+ stewardship: { label: 'Stewardship', title: 'Relationships to move forward', description: 'Keep follow-ups, superfans and recent interactions in one view.', metrics: [['Superfans','124','+6.1%'],['Tasks due','9','3 today'],['Churn risk','207','Needs review'],['Recent notes','18','This week']], action: ['Open task queue','/dashboard/crm/tasks'] },
+ service: { label: 'Patron service', title: 'Service command center', description: 'Handle access needs and follow-ups with patron context close by.', metrics: [['Open cases','12','4 today'],['Access notes','7','2 updated'],['Tasks due','6','1 overdue'],['Resolved','28','This week']], action: ['Open service queue','/dashboard/crm/tasks'] },
+} as const;
+
+export function RoleHome() {
+ const user=useAuthStore((state)=>state.user); const view=views[roleFor(user?.role?.name)];
+ return <div className="space-y-6"><div className="flex flex-wrap items-start justify-between gap-4"><div><div className="mb-2 flex items-center gap-2"><Badge className="bg-co-blue/10 text-co-blue hover:bg-co-blue/10">{view.label} home</Badge><span className="text-xs text-muted-foreground">Prototype data · backend wiring pending</span></div><h1 className="text-3xl font-bold">{view.title}</h1><p className="mt-1 text-muted-foreground">{view.description}</p></div><Button asChild className="gap-2"><Link href={view.action[1]}>{view.action[0]}<ArrowRight className="h-4 w-4"/></Link></Button></div>
+ <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">{view.metrics.map(([label,value,note],i)=>{const Icon=[UsersRound,TrendingUp,Mail,CheckCircle2][i];return <Card key={label} className="rounded-2xl"><CardContent className="p-5"><div className="flex justify-between"><p className="text-sm font-medium text-muted-foreground">{label}</p><span className="rounded-lg bg-co-blue/10 p-2 text-co-blue"><Icon className="h-4 w-4"/></span></div><p className="mt-3 text-3xl font-bold">{value}</p><p className="mt-1 text-xs text-muted-foreground">{note}</p></CardContent></Card>})}</div>
+ <div className="grid gap-4 lg:grid-cols-[1.25fr_.75fr]"><Card className="rounded-2xl"><CardHeader className="flex-row items-center justify-between"><CardTitle className="text-base">Today</CardTitle><Link href="/dashboard/crm/tasks" className="text-sm font-semibold text-co-blue">View all</Link></CardHeader><CardContent className="space-y-3">{[['Follow up with first-time patrons','Audience','Today'],['Review churn-risk audience','Retention','Today'],['Resolve access preference update','Service','Tomorrow']].map(([title,type,due])=><div key={title} className="flex items-center gap-3 rounded-xl border p-3"><CalendarCheck className="h-4 w-4 text-co-blue"/><div className="min-w-0 flex-1"><p className="truncate text-sm font-semibold">{title}</p><p className="text-xs text-muted-foreground">{type}</p></div><span className="text-xs text-muted-foreground">{due}</span></div>)}</CardContent></Card><Card className="rounded-2xl"><CardHeader><CardTitle className="text-base">Data readiness</CardTitle></CardHeader><CardContent className="space-y-4 text-sm"><p className="flex gap-2"><ShieldCheck className="h-4 w-4 text-emerald-600"/>Consent rules documented</p><p className="flex gap-2"><BarChart3 className="h-4 w-4 text-amber-600"/>Company contacts API pending</p><Button asChild variant="outline" className="w-full"><Link href="/dashboard/settings/integrations">Review sources</Link></Button></CardContent></Card></div></div>;
+}
