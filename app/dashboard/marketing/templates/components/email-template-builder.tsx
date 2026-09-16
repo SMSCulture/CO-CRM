@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { ArrowLeft, Check, Eye, LayoutPanelLeft, LayoutTemplate, Mail, MoreHorizontal, Plus, Send } from 'lucide-react';
+import { ArrowLeft, Check, Eye, LayoutPanelLeft, LayoutTemplate, Mail, MoreHorizontal, Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -35,7 +35,7 @@ export function EmailTemplateBuilder() {
   return <div className="overflow-hidden rounded-xl border bg-white shadow-sm">
     <div className="flex min-h-16 items-center justify-between gap-4 border-b px-4">
       <div className="flex min-w-0 items-center gap-3"><Button variant="ghost" size="icon" aria-label="Back to campaign library" onClick={() => setEditing(false)}><ArrowLeft className="h-4 w-4" /></Button><div><p className="text-xs text-muted-foreground">Email campaigns <span className="px-1">›</span> Design</p><p className="flex items-center gap-1 text-xs text-muted-foreground"><Check className="h-3 w-3 text-emerald-600" />Saved locally · Prototype</p></div></div>
-      <div className="flex items-center gap-2"><Button variant="ghost" size="icon" aria-label="Toggle settings panel" onClick={() => setRailOpen((open) => !open)}><LayoutPanelLeft className="h-4 w-4"/></Button><Button variant="outline" size="sm" className="hidden gap-1.5 lg:flex"><Eye className="h-4 w-4"/>Send test email</Button><Button size="sm" className="gap-1.5"><Send className="h-4 w-4"/>Continue</Button><Button variant="ghost" size="icon" aria-label="More campaign actions"><MoreHorizontal className="h-4 w-4" /></Button></div>
+      <div className="flex items-center gap-2"><Button variant="ghost" size="icon" aria-label="Toggle settings panel" onClick={() => setRailOpen((open) => !open)}><LayoutPanelLeft className="h-4 w-4"/></Button><Button variant="outline" size="sm" className="hidden gap-1.5 lg:flex"><Eye className="h-4 w-4"/>Send test email</Button><Button variant="ghost" size="icon" aria-label="More campaign actions"><MoreHorizontal className="h-4 w-4" /></Button></div>
     </div>
     <div className="flex h-[calc(100vh-12rem)] min-h-[660px] overflow-hidden">
       <aside className={cn("shrink-0 overflow-y-auto border-r bg-white transition-[width]", railOpen ? "w-[340px]" : "w-0 border-r-0")}>
