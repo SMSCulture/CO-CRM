@@ -6,8 +6,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   return (
     <ProtectedPage>
       <div className="dashboard-theme flex min-h-screen bg-slate-50/70">
-        <DashboardSidebar />
-        <div className="min-w-0 flex-1"><DashboardTopbar /><main className="mx-auto max-w-[1600px] p-5 lg:p-8">{children}</main></div>
+        <div data-dashboard-sidebar><DashboardSidebar /></div>
+        <div data-dashboard-shell className="min-w-0 flex-1"><div data-dashboard-topbar><DashboardTopbar /></div><main data-dashboard-main className="mx-auto max-w-[1600px] p-5 lg:p-8">{children}</main></div>
       </div>
     </ProtectedPage>
   );

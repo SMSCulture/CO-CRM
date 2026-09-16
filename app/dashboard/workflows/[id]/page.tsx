@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { ArrowLeft, Save } from 'lucide-react';
 import { toast } from 'sonner';
@@ -27,6 +27,11 @@ export default function WorkflowBuilderPage() {
   const [saving, setSaving] = useState(false);
   const [focusNodeId, setFocusNodeId] = useState<string | null>(null);
   const issues = useMemo(() => workflow ? validateWorkflow(workflow) : [], [workflow]);
+
+  useEffect(() => {
+    document.body.classList.add('automation-editor-fullscreen');
+    return () => document.body.classList.remove('automation-editor-fullscreen');
+  }, []);
 
   if (!workflow) return <div className="space-y-4"><Button variant="ghost" className="gap-2" onClick={() => router.push('/dashboard/workflows')}><ArrowLeft className="h-4 w-4" />Back to Automations</Button><p className="text-sm text-muted-foreground">Automation not found.</p></div>;
 
@@ -59,28 +64,29 @@ export default function WorkflowBuilderPage() {
   }
 
   return (
-    <div className="space-y-4">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <Button variant="ghost" className="gap-2" onClick={() => router.push('/dashboard/workflows')}><ArrowLeft className="h-4 w-4" />Back to Automations</Button>
-        <Button className="gap-2" onClick={handleSave} disabled={saving}><Save className="h-4 w-4" />{saving ? 'Saving...' : 'Save automation'}</Button>
+    <div className="flex h-screen min-h-0 flex-col bg-slate-50">
+      <nav className="flex shrink-0 flex-wrap items-center gap-3 border-b bg-white px-4 py-3">
+        <Button variant="ghost" className="gap-2" onClick={() => router.push('/dashboard/workflows')}><ArrowLeft className="h-4 w-4" />Exit</Button>
+        <div className="h-6 w-px bg-border" />
+        <div className="min-w-[220px] flex-1"><Label htmlFor="workflow-name" className="sr-only">Automation name</Label><Input id="workflow-name" className="h-9 border-0 bg-transparent px-2 text-base font-semibold shadow-none focus-visible:ring-1" value={workflow.name} onChange={(event) => updateWorkflow(workflow.id, { name: event.target.value })} /></div>
+        <div className="flex items-center gap-2"><Switch checked={workflow.isActive} onCheckedChange={handleToggle} id="workflow-active" /><Label htmlFor="workflow-active">{workflow.isActive ? 'Active' : 'Draft'}</Label></div>
+        <Button className="gap-2" onClick={handleSave} disabled={saving}><Save className="h-4 w-4" />{saving ? 'Saving...' : 'Save'}</Button>
+      </nav>
+      <div className="flex shrink-0 items-center gap-3 border-b bg-white px-5 py-2">
+        <Label htmlFor="workflow-description" className="text-xs text-muted-foreground">Description</Label>
+        <Input id="workflow-description" className="h-8 border-0 bg-slate-50 shadow-none" value={workflow.description} onChange={(event) => updateWorkflow(workflow.id, { description: event.target.value })} />
       </div>
-
-      <div className="grid gap-3 rounded-xl border bg-white p-4 lg:grid-cols-[1fr_1fr_auto] lg:items-end">
-        <div className="space-y-1.5"><Label htmlFor="workflow-name">Name</Label><Input id="workflow-name" value={workflow.name} onChange={(event) => updateWorkflow(workflow.id, { name: event.target.value })} /></div>
-        <div className="space-y-1.5"><Label htmlFor="workflow-description">Description</Label><Textarea id="workflow-description" rows={1} value={workflow.description} onChange={(event) => updateWorkflow(workflow.id, { description: event.target.value })} /></div>
-        <div className="flex h-10 items-center gap-2"><Switch checked={workflow.isActive} onCheckedChange={handleToggle} id="workflow-active" /><Label htmlFor="workflow-active">{workflow.isActive ? 'Active' : 'Draft'}</Label></div>
+      <div className="min-h-0 flex-1 p-3">
+        <WorkflowCanvas
+          workflow={workflow}
+          focusNodeId={focusNodeId}
+          onFocusHandled={() => setFocusNodeId(null)}
+          onUpdateNode={(nodeId, patch) => updateNode(workflow.id, nodeId, patch)}
+          onAddNode={(node) => addNode(workflow.id, node)}
+          onRemoveNode={(nodeId) => removeNode(workflow.id, nodeId)}
+          onConnect={(edge) => connectNodes(workflow.id, edge)}
+          onRemoveEdge={(edgeId) => removeEdge(workflow.id, edgeId)}
+        />
       </div>
-
-      <WorkflowCanvas
-        workflow={workflow}
-        focusNodeId={focusNodeId}
-        onFocusHandled={() => setFocusNodeId(null)}
-        onUpdateNode={(nodeId, patch) => updateNode(workflow.id, nodeId, patch)}
-        onAddNode={(node) => addNode(workflow.id, node)}
-        onRemoveNode={(nodeId) => removeNode(workflow.id, nodeId)}
-        onConnect={(edge) => connectNodes(workflow.id, edge)}
-        onRemoveEdge={(edgeId) => removeEdge(workflow.id, edgeId)}
-      />
     </div>
-  );
-}
+  );}
