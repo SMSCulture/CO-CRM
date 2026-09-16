@@ -8,6 +8,7 @@ const TABS = [
   { href: "/dashboard/crm/contacts", label: "Contacts" },
   { href: "/dashboard/crm/segments", label: "Segments" },
   { href: "/dashboard/crm/retention", label: "Retention" },
+  { href: "/dashboard/crm/tasks", label: "Tasks" },
   { href: "/dashboard/crm/tags", label: "Tags" },
   { href: "/dashboard/crm/data-properties", label: "Data & Properties" },
 ] as const;
