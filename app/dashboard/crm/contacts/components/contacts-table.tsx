@@ -44,7 +44,7 @@ export function ContactsTable({ contacts }: ContactsTableProps) {
       {selected.size > 0 && <div className="flex items-center gap-2"><Button size="sm" variant="outline">Add tag</Button><Button size="sm" variant="outline">Add to segment</Button></div>}
     </div>
     <div className="max-w-full overflow-x-auto">
-      <Table className="min-w-[1060px]">
+      <Table className="min-w-[1160px]">
         <TableHeader className="sticky top-0 z-10 bg-slate-50/95 backdrop-blur dark:bg-slate-950/95">
           <TableRow className="hover:bg-transparent">
             <TableHead className="w-12 pl-4"><Checkbox checked={allSelected} onCheckedChange={toggleAll} aria-label="Select all contacts" /></TableHead>
@@ -53,7 +53,7 @@ export function ContactsTable({ contacts }: ContactsTableProps) {
             <TableHead>Tags</TableHead>
             <TableHead>Location</TableHead>
             <TableHead><SortButton label="Lifetime spend" active={sort.key === 'totalSpend'} direction={sort.direction} onClick={() => toggleSort('totalSpend')} /></TableHead>
-            <TableHead className="text-right">Purchased</TableHead>
+            <TableHead className="text-right">Donated</TableHead><TableHead className="text-right">Purchased</TableHead>
             <TableHead className="text-right">Attended</TableHead>
             <TableHead><SortButton label="Last active" active={sort.key === 'lastActivity'} direction={sort.direction} onClick={() => toggleSort('lastActivity')} /></TableHead>
           </TableRow>
@@ -67,7 +67,7 @@ export function ContactsTable({ contacts }: ContactsTableProps) {
             <TableCell><div className="flex max-w-44 items-center gap-1.5">{contact.tags.slice(0, 2).map((tag) => <TagPill key={tag} tag={tag} />)}{contact.tags.length > 2 && <span className="text-xs text-muted-foreground">+{contact.tags.length - 2}</span>}{contact.tags.length === 0 && <span className="text-xs text-muted-foreground">No tags</span>}</div></TableCell>
             <TableCell><span className="text-sm text-foreground">{contact.city}</span><span className="block text-xs text-muted-foreground">{contact.zip}</span></TableCell>
             <TableCell className="text-right font-semibold tabular-nums">${contact.totalSpend.toLocaleString()}</TableCell>
-            <TableCell className="text-right tabular-nums text-muted-foreground">{contact.eventsPurchased}</TableCell>
+            <TableCell className="text-right font-semibold tabular-nums text-violet-700">${contact.totalDonations.toLocaleString()}</TableCell><TableCell className="text-right tabular-nums text-muted-foreground">{contact.eventsPurchased}</TableCell>
             <TableCell className="text-right tabular-nums text-muted-foreground">{contact.eventsAttended}</TableCell>
             <TableCell><span className="text-sm tabular-nums">{contact.lastActivity}</span><span className="mt-0.5 flex items-center gap-1 text-[11px] text-muted-foreground">{contact.subscribedEmail ? <><MailCheck className="h-3 w-3 text-emerald-600" />Email</> : <><MessageSquareOff className="h-3 w-3" />No email</>}</span></TableCell>
           </TableRow>;

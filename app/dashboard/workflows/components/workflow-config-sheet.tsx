@@ -56,6 +56,14 @@ export function WorkflowConfigSheet({ node, open, onOpenChange, onChange, onDele
               <p className="text-xs text-muted-foreground">This node is a draft. Publishing stays off until OAuth, asset selection, provider eligibility and the execution backend are live.</p>
             </div>
           )}
+          {node.type === 'action' && node.subtype === 'promo_code' && (
+            <div className="space-y-4 rounded-lg border bg-slate-50 p-4">
+              <div className="space-y-2"><Label htmlFor="promo-code">Promo code</Label><Input id="promo-code" placeholder="e.g. MEMBER20" value={String(node.config.code ?? '')} onChange={(event)=>setConfig('code',event.target.value.toUpperCase())}/></div>
+              <div className="grid grid-cols-2 gap-3"><div className="space-y-2"><Label>Discount type</Label><Select value={String(node.config.discountType ?? 'percent')} onValueChange={(value)=>setConfig('discountType',value)}><SelectTrigger><SelectValue/></SelectTrigger><SelectContent><SelectItem value="percent">Percent off</SelectItem><SelectItem value="fixed">Fixed amount</SelectItem></SelectContent></Select></div><div className="space-y-2"><Label htmlFor="promo-value">Value</Label><Input id="promo-value" min={1} type="number" placeholder="20" value={String(node.config.value ?? '')} onChange={(event)=>setConfig('value',Number(event.target.value))}/></div></div>
+              <div className="space-y-2"><Label>Applies to</Label><Select value={String(node.config.eventScope ?? 'workflow_event')} onValueChange={(value)=>setConfig('eventScope',value)}><SelectTrigger><SelectValue/></SelectTrigger><SelectContent><SelectItem value="workflow_event">Workflow event</SelectItem><SelectItem value="selected_event">Choose an event</SelectItem></SelectContent></Select></div>
+              <p className="text-xs text-muted-foreground">Draft configuration only. Production needs ticketing-provider support, redemption limits, start/end dates, conflict checks and audit history before codes are created.</p>
+            </div>
+          )}
           {node.type === 'action' && node.subtype === 'add_to_segment' && (
             <div className="space-y-2"><Label>Segment</Label><Select value={String(node.config.segmentId ?? '')} onValueChange={(value)=>setConfig('segmentId',value)}><SelectTrigger><SelectValue placeholder="Choose an existing segment"/></SelectTrigger><SelectContent><SelectItem value="recent-buyers">Recent ticket buyers</SelectItem><SelectItem value="members">Members</SelectItem><SelectItem value="lapsed">Lapsed attendees</SelectItem></SelectContent></Select><p className="text-xs text-muted-foreground">This references an existing segment. Segment rules stay in the CRM segment builder.</p></div>
           )}

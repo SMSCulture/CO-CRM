@@ -1,4 +1,4 @@
-import { Bell, CalendarClock, CircleStop, Clock3, Facebook, Flag, GitBranch, Instagram, Mail, Megaphone, Search, Tags, UserRoundCog, Webhook } from 'lucide-react';
+import { Bell, CalendarClock, CircleStop, Clock3, Facebook, Flag, GitBranch, Instagram, Mail, Megaphone, Search, TicketPercent, Tags, UserRoundCog, Webhook } from 'lucide-react';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import type { WorkflowNodeType } from '@/store/workflow-builder-store';
@@ -7,7 +7,7 @@ export interface PaletteItem { type: WorkflowNodeType; subtype: string; label: s
 const GROUPS = [
  { label:'Start from CRM activity', hint:'Who or what enters the workflow', items:[{type:'trigger',subtype:'record_created',label:'CRM record created',icon:Webhook,tone:'text-sky-600 bg-sky-50'},{type:'trigger',subtype:'event_published',label:'Event published',icon:CalendarClock,tone:'text-violet-600 bg-violet-50'}]},
  { label:'Communicate', hint:'Send or prepare a message', items:[{type:'action',subtype:'send_email',label:'Send email',icon:Mail,tone:'text-blue-600 bg-blue-50'},{type:'action',subtype:'notify_staff',label:'Notify staff',icon:Bell,tone:'text-amber-600 bg-amber-50'},{type:'action',subtype:'instagram',label:'Instagram',icon:Instagram,tone:'text-fuchsia-600 bg-fuchsia-50'},{type:'action',subtype:'facebook',label:'Facebook',icon:Facebook,tone:'text-[#1877F2] bg-blue-50'},{type:'action',subtype:'tiktok',label:'TikTok',icon:Megaphone,tone:'text-cyan-600 bg-cyan-50'}]},
- { label:'Update CRM', hint:'Use contacts, segments, and patron data', items:[{type:'action',subtype:'add_to_segment',label:'Add to segment',icon:Tags,tone:'text-emerald-600 bg-emerald-50'},{type:'action',subtype:'update_field',label:'Update contact field',icon:UserRoundCog,tone:'text-indigo-600 bg-indigo-50'}]},
+ { label:'Update CRM', hint:'Use contacts, segments, and patron data', items:[{type:'action',subtype:'add_to_segment',label:'Add to segment',icon:Tags,tone:'text-emerald-600 bg-emerald-50'},{type:'action',subtype:'update_field',label:'Update contact field',icon:UserRoundCog,tone:'text-indigo-600 bg-indigo-50'},{type:'action',subtype:'promo_code',label:'Create promo code',icon:TicketPercent,tone:'text-rose-600 bg-rose-50'}]},
  { label:'Control the path', hint:'Branch, delay, measure, or finish', items:[{type:'condition',subtype:'contact_filter',label:'If / else',icon:GitBranch,tone:'text-violet-600 bg-violet-50'},{type:'wait',subtype:'fixed_delay',label:'Wait',icon:Clock3,tone:'text-slate-600 bg-slate-100'},{type:'goal',subtype:'conversion',label:'Goal',icon:Flag,tone:'text-emerald-600 bg-emerald-50'},{type:'exit',subtype:'complete',label:'Exit',icon:CircleStop,tone:'text-slate-600 bg-slate-100'}]},
 ] satisfies Array<{label:string;hint:string;items:Array<PaletteItem & {icon:typeof Mail;tone:string}>}>;
 
