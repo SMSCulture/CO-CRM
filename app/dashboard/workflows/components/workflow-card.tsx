@@ -4,13 +4,6 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import type { Workflow } from '@/store/workflow-builder-store';
 
-const TRIGGER_LABELS: Record<Workflow['trigger']['type'], string> = {
-  record_created: 'Record created',
-  record_updated: 'Record updated',
-  scheduled: 'Scheduled',
-  manual: 'Manual',
-};
-
 export function WorkflowCard({ workflow }: { workflow: Workflow }) {
   return (
     <Link href={`/dashboard/workflows/${workflow.id}`}>
@@ -25,8 +18,7 @@ export function WorkflowCard({ workflow }: { workflow: Workflow }) {
             </div>
             <p className="mt-1 text-sm text-muted-foreground">{workflow.description || 'No description yet.'}</p>
             <p className="mt-2 text-xs text-muted-foreground">
-              Trigger: {TRIGGER_LABELS[workflow.trigger.type]} · {workflow.steps.length} step
-              {workflow.steps.length === 1 ? '' : 's'}
+              {workflow.nodes.length} nodes · {workflow.edges.length} connections
             </p>
           </div>
           <ChevronRight className="h-5 w-5 shrink-0 text-muted-foreground" />

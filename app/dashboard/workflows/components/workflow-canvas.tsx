@@ -1,0 +1,111 @@
+'use client';
+
+import { useCallback, useMemo, useState } from 'react';
+import {
+  Background,
+  Controls,
+  MarkerType,
+  MiniMap,
+  ReactFlow,
+  type Connection,
+  type Edge,
+  type Node,
+  type NodeChange,
+  applyNodeChanges,
+} from '@xyflow/react';
+import '@xyflow/react/dist/style.css';
+import type { Workflow, WorkflowBranch, WorkflowNode } from '@/store/workflow-builder-store';
+import { WorkflowCanvasNode } from './workflow-node';
+import { WorkflowConfigSheet } from './workflow-config-sheet';
+import { WorkflowPalette, type PaletteItem } from './workflow-palette';
+
+interface Props {
+  workflow: Workflow;
+  onUpdateNode: (nodeId: string, patch: Partial<Omit<WorkflowNode, 'id' | 'type'>>) => void;
+  onAddNode: (node: Omit<WorkflowNode, 'id'>) => string;
+  onRemoveNode: (nodeId: string) => void;
+  onConnect: (edge: { from: string; to: string; branch?: WorkflowBranch }) => void;
+  onRemoveEdge: (edgeId: string) => void;
+}
+
+const nodeTypes = { workflow: WorkflowCanvasNode };
+
+export function WorkflowCanvas({ workflow, onUpdateNode, onAddNode, onRemoveNode, onConnect, onRemoveEdge }: Props) {
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [localPositions, setLocalPositions] = useState<Record<string, WorkflowNode['position']>>({});
+  const selectedNode = workflow.nodes.find((node) => node.id === selectedId) ?? null;
+
+  const nodes = useMemo<Node[]>(() => workflow.nodes.map((node) => ({
+    id: node.id,
+    type: 'workflow',
+    position: localPositions[node.id] ?? node.position,
+    data: { workflowNode: node },
+  })), [workflow.nodes, localPositions]);
+
+  const edges = useMemo<Edge[]>(() => workflow.edges.map((edge) => ({
+    id: edge.id,
+    source: edge.from,
+    target: edge.to,
+    sourceHandle: edge.branch,
+    label: edge.branch ? edge.branch.toUpperCase() : undefined,
+    markerEnd: { type: MarkerType.ArrowClosed },
+    animated: true,
+  })), [workflow.edges]);
+
+  const handleNodesChange = useCallback((changes: NodeChange[]) => {
+    const nextNodes = applyNodeChanges(changes, nodes);
+    const positions: Record<string, WorkflowNode['position']> = {};
+    nextNodes.forEach((node) => { positions[node.id] = node.position; });
+    setLocalPositions(positions);
+    changes.forEach((change) => {
+      if (change.type === 'position' && change.position && !change.dragging) {
+        onUpdateNode(change.id, { position: change.position });
+      }
+      if (change.type === 'remove') onRemoveNode(change.id);
+    });
+  }, [nodes, onRemoveNode, onUpdateNode]);
+
+  const handleConnect = useCallback((connection: Connection) => {
+    if (!connection.source || !connection.target) return;
+    const branch = connection.sourceHandle === 'yes' || connection.sourceHandle === 'no' ? connection.sourceHandle : undefined;
+    onConnect({ from: connection.source, to: connection.target, branch });
+  }, [onConnect]);
+
+  const handleAdd = (item: PaletteItem) => {
+    const count = workflow.nodes.length;
+    const id = onAddNode({ ...item, config: {}, position: { x: 260 + (count % 3) * 260, y: 170 + Math.floor(count / 3) * 160 } });
+    setSelectedId(id);
+  };
+
+  return (
+    <div className="flex h-[680px] overflow-hidden rounded-2xl border border-border bg-slate-50">
+      <WorkflowPalette onAdd={handleAdd} />
+      <div className="min-w-0 flex-1">
+        <ReactFlow
+          nodes={nodes}
+          edges={edges}
+          nodeTypes={nodeTypes}
+          onNodesChange={handleNodesChange}
+          onConnect={handleConnect}
+          onEdgesDelete={(items) => items.forEach((edge) => onRemoveEdge(edge.id))}
+          onNodeClick={(_, node) => setSelectedId(node.id)}
+          onPaneClick={() => setSelectedId(null)}
+          fitView
+          fitViewOptions={{ padding: 0.25 }}
+          deleteKeyCode={['Backspace', 'Delete']}
+        >
+          <Background gap={18} size={1} />
+          <MiniMap pannable zoomable nodeStrokeWidth={3} />
+          <Controls showInteractive={false} />
+        </ReactFlow>
+      </div>
+      <WorkflowConfigSheet
+        node={selectedNode}
+        open={Boolean(selectedNode)}
+        onOpenChange={(open) => { if (!open) setSelectedId(null); }}
+        onChange={(patch) => { if (selectedNode) onUpdateNode(selectedNode.id, patch); }}
+        onDelete={() => { if (selectedNode) { onRemoveNode(selectedNode.id); setSelectedId(null); } }}
+      />
+    </div>
+  );
+}
