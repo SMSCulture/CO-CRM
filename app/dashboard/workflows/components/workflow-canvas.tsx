@@ -20,7 +20,7 @@ import { WorkflowConfigSheet } from './workflow-config-sheet';
 import { TriggerLeftPanel } from './trigger-left-panel';
 import { WorkflowNodePicker, type PaletteItem } from './workflow-palette';
 import { Button } from '@/components/ui/button';
-import { PanelLeft, Plus } from 'lucide-react';
+import { Clock3, GitBranch, PanelLeft, Plus, Split } from 'lucide-react';
 
 interface Props {
   workflow: Workflow;
@@ -92,11 +92,16 @@ export function WorkflowCanvas({ workflow, focusNodeId, onFocusHandled, onUpdate
     setSelectedId(id);
   };
   const handleAdd=(item:PaletteItem)=>addAt(item);
+  const addBoardControl=(kind:'wait'|'condition'|'split')=>{
+    if(kind==='wait') addAt({type:'wait',subtype:'fixed_delay',label:'Wait / delay'});
+    if(kind==='condition') addAt({type:'condition',subtype:'contact_filter',label:'If / else'});
+    if(kind==='split') addAt({type:'condition',subtype:'split_path',label:'Split path'});
+  };
 
   return (
     <div className="relative flex h-[calc(100vh-16rem)] min-h-[640px] overflow-hidden rounded-xl border border-border bg-[#f7f5f2]">
       {mobileRailOpen&&<button className="absolute inset-0 z-20 bg-black/25 lg:hidden" aria-label="Close trigger panel" onClick={()=>setMobileRailOpen(false)}/>}<aside className={`${mobileRailOpen?'absolute inset-y-0 left-0 z-30 flex w-[min(88vw,360px)]':'hidden'} shrink-0 border-r bg-white p-4 shadow-xl lg:relative lg:z-10 lg:flex lg:w-[320px] lg:shadow-none`}><TriggerLeftPanel triggers={triggers} selected={selectedNode} onSelect={id=>setSelectedId(id||null)} onAdd={handleAdd} onChange={patch=>selectedNode&&onUpdateNode(selectedNode.id,patch)} onDelete={()=>{if(selectedNode){onRemoveNode(selectedNode.id);setSelectedId(null)}}} onClose={()=>setMobileRailOpen(false)}/></aside><Button size="sm" variant="outline" className="absolute left-3 top-3 z-20 h-8 gap-1.5 rounded-full bg-white px-3 shadow-md lg:hidden" onClick={()=>setMobileRailOpen(true)}><PanelLeft className="h-3.5 w-3.5"/>Triggers</Button><Button size="sm" className="absolute left-[112px] top-3 z-20 h-8 gap-1.5 rounded-full px-3 shadow-md lg:left-[332px]" onClick={()=>setPickerOpen(true)}><Plus className="h-3.5 w-3.5"/>Add node</Button>
-      <div className="min-w-0 flex-1">
+      <div className="relative min-w-0 flex-1"><div className="absolute right-3 top-3 z-20 flex items-center gap-1 rounded-lg border bg-white p-1 shadow-sm" aria-label="Flow controls"><span className="hidden px-2 text-[11px] font-semibold uppercase tracking-wide text-muted-foreground sm:inline">Flow</span><Button size="sm" variant="ghost" className="h-8 gap-1.5 px-2" onClick={()=>addBoardControl('wait')}><Clock3 className="h-3.5 w-3.5"/>Wait</Button><Button size="sm" variant="ghost" className="h-8 gap-1.5 px-2" onClick={()=>addBoardControl('condition')}><GitBranch className="h-3.5 w-3.5"/>If / else</Button><Button size="sm" variant="ghost" className="hidden h-8 gap-1.5 px-2 sm:inline-flex" onClick={()=>addBoardControl('split')}><Split className="h-3.5 w-3.5"/>Split</Button></div>
         <ReactFlow
           nodes={nodes}
           edges={edges}
