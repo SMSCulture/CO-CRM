@@ -99,7 +99,7 @@ export const useAuthStore = create<AuthState>()(
           // If we redirect before receiving the response, cookies won't be cleared
           try {
             logger.debug('🔄 Calling force-logout endpoint...');
-            await fetch('/api/auth/force-logout', {
+            await fetch('/api/auth/logout', {
               method: 'POST',
               credentials: 'include',
             });
