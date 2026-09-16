@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { INTEGRATION_APPS, INTEGRATION_CATEGORY_LABELS } from "@/lib/data/integrations";
 import { AppIcon } from "../components/app-icon";
+import { MetaConnectPanel } from "../components/meta-connect-panel";
 
 const LOGO_COLORS: Record<string, string> = {
   "meta-ads": "1877F2",
@@ -93,6 +94,8 @@ export default function IntegrationDetailPage() {
           </div>
         </div>
       </div>
+
+      {app.id === "meta-ads" && <MetaConnectPanel />}
 
       {setupOpen && <section className="rounded-xl border bg-white p-6"><div className="flex flex-wrap items-start justify-between gap-4"><div><h2 className="text-xl font-bold">Set up {app.name}</h2><p className="mt-1 text-sm text-muted-foreground">UI preparation only. Connecting requires a reviewed OAuth callback and backend token vault.</p></div><span className="rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold text-amber-900">Not connected</span></div><div className="mt-5 grid gap-4 md:grid-cols-2"><div className="space-y-1.5"><Label>Connection name</Label><Input defaultValue={`${app.name} - CultureOwl`}/></div><div className="space-y-1.5"><Label>Account ID</Label><Input placeholder="Returned after OAuth" disabled/></div></div><div className="mt-5 space-y-3 rounded-lg bg-slate-50 p-4"><p className="text-sm font-semibold">Sync controls</p><label className="flex items-center justify-between gap-4 text-sm">Import contacts and activity<Switch defaultChecked/></label><label className="flex items-center justify-between gap-4 text-sm">Export approved audiences<Switch/></label><label className="flex items-center justify-between gap-4 text-sm">Conversion reporting<Switch defaultChecked/></label></div><div className="mt-5 flex justify-end gap-2"><Button variant="outline" onClick={() => setSetupOpen(false)}>Cancel</Button><Button disabled>Connect with {app.name}</Button></div><p className="mt-3 text-xs text-muted-foreground">Connect remains disabled until OAuth scopes, callback URL, token health, field mapping, disconnect and error recovery are implemented server-side.</p></section>}
 
