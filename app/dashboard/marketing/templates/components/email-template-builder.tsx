@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { ArrowLeft, Check, Eye, LayoutTemplate, Mail, Monitor, MoreHorizontal, Plus, Send, Smartphone } from 'lucide-react';
+import { ArrowLeft, Check, Eye, LayoutPanelLeft, LayoutTemplate, Mail, MoreHorizontal, Plus, Send } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -19,6 +19,7 @@ export type PreviewWidth = 'desktop' | 'mobile';
 export function EmailTemplateBuilder() {
   const [editing, setEditing] = useState(false);
   const [previewWidth, setPreviewWidth] = useState<PreviewWidth>('desktop');
+  const [railOpen, setRailOpen] = useState(true);
   const [name, setName] = useState('Season announcement');
   const resetDocument = useEmailTemplateBuilderStore((state) => state.resetDocument);
   const selectedBlockId = useEmailTemplateBuilderStore((state) => state.selectedBlockId);
@@ -34,11 +35,10 @@ export function EmailTemplateBuilder() {
   return <div className="overflow-hidden rounded-xl border bg-white shadow-sm">
     <div className="flex min-h-16 items-center justify-between gap-4 border-b px-4">
       <div className="flex min-w-0 items-center gap-3"><Button variant="ghost" size="icon" aria-label="Back to campaign library" onClick={() => setEditing(false)}><ArrowLeft className="h-4 w-4" /></Button><div><p className="text-xs text-muted-foreground">Email campaigns <span className="px-1">›</span> Design</p><p className="flex items-center gap-1 text-xs text-muted-foreground"><Check className="h-3 w-3 text-emerald-600" />Saved locally · Prototype</p></div></div>
-      <div className="hidden rounded-lg border bg-slate-50 p-1 sm:flex"><WidthButton active={previewWidth === 'desktop'} label="Desktop" onClick={() => setPreviewWidth('desktop')}><Monitor className="h-4 w-4" /></WidthButton><WidthButton active={previewWidth === 'mobile'} label="Mobile" onClick={() => setPreviewWidth('mobile')}><Smartphone className="h-4 w-4" /></WidthButton></div>
-      <div className="flex items-center gap-2"><Button variant="outline" size="sm" className="hidden gap-1.5 lg:flex"><Eye className="h-4 w-4"/>Send test email</Button><Button size="sm" className="gap-1.5"><Send className="h-4 w-4"/>Continue</Button><Button variant="ghost" size="icon" aria-label="More campaign actions"><MoreHorizontal className="h-4 w-4" /></Button></div>
+      <div className="flex items-center gap-2"><Button variant="ghost" size="icon" aria-label="Toggle settings panel" onClick={() => setRailOpen((open) => !open)}><LayoutPanelLeft className="h-4 w-4"/></Button><Button variant="outline" size="sm" className="hidden gap-1.5 lg:flex"><Eye className="h-4 w-4"/>Send test email</Button><Button size="sm" className="gap-1.5"><Send className="h-4 w-4"/>Continue</Button><Button variant="ghost" size="icon" aria-label="More campaign actions"><MoreHorizontal className="h-4 w-4" /></Button></div>
     </div>
     <div className="flex h-[calc(100vh-12rem)] min-h-[660px] overflow-hidden">
-      <aside className="w-[360px] shrink-0 overflow-y-auto border-r bg-white">
+      <aside className={cn("shrink-0 overflow-y-auto border-r bg-white transition-[width]", railOpen ? "w-[340px]" : "w-0 border-r-0")}>
         <Tabs defaultValue="info" className="h-full">
           <TabsList className="grid h-14 w-full grid-cols-3 rounded-none border-b bg-white p-0"><TabsTrigger value="info" className="h-full rounded-none border-b-2 border-transparent data-[state=active]:border-co-blue data-[state=active]:shadow-none">Basic info</TabsTrigger><TabsTrigger value="content" className="h-full rounded-none border-b-2 border-transparent data-[state=active]:border-co-blue data-[state=active]:shadow-none">Content</TabsTrigger><TabsTrigger value="style" className="h-full rounded-none border-b-2 border-transparent data-[state=active]:border-co-blue data-[state=active]:shadow-none">Style</TabsTrigger></TabsList>
           <TabsContent value="info" className="m-0 space-y-6 p-6"><section className="space-y-4"><h2 className="text-xl font-bold">Campaign information</h2><Field label="Campaign name" value={name} onChange={setName}/><Field label="From" value="CultureOwl Arts"/><Field label="Reply-to email address" value="hello@cultureowl.com" type="email"/></section><section className="space-y-4"><h2 className="text-xl font-bold">Footer</h2><p className="text-sm text-muted-foreground">Add accurate organizer details to improve delivery and meet email requirements.</p><Field label="Organizer name" value="CultureOwl Arts"/><Field label="Address" value="123 Arts Avenue"/></section></TabsContent>
@@ -46,7 +46,7 @@ export function EmailTemplateBuilder() {
           <TabsContent value="style" className="m-0 p-6"><StylePanel /></TabsContent>
         </Tabs>
       </aside>
-      <div className="min-w-0 flex-1 bg-slate-100"><div className="px-8 pt-6"><Input value={name} onChange={(event) => setName(event.target.value)} aria-label="Campaign name" className="w-72 border-0 bg-transparent px-0 text-sm font-semibold shadow-none" /></div><CanvasPanel previewWidth={previewWidth} /></div>
+      <div className="min-w-0 flex-1 bg-slate-100"><div className="px-8 pt-6"><Input value={name} onChange={(event) => setName(event.target.value)} aria-label="Campaign name" className="w-72 border-0 bg-transparent px-0 text-sm font-semibold shadow-none" /></div><CanvasPanel previewWidth={previewWidth} onPreviewWidthChange={setPreviewWidth} /></div>
     </div>
   </div>;
 }
@@ -56,4 +56,3 @@ function TemplateLibrary({ onOpen }: { onOpen: (index: number) => void }) {
 }
 function TemplateCard({ title, description, icon, onClick }: { title: string; description: string; icon: React.ReactNode; onClick: () => void }) { return <button onClick={onClick} className="group overflow-hidden rounded-xl border bg-white text-left shadow-sm transition hover:-translate-y-0.5 hover:border-co-blue hover:shadow-md"><div className="grid h-44 place-items-center bg-slate-100 text-co-blue"><div className="grid h-20 w-28 place-items-center rounded-md border bg-white shadow-sm">{icon}</div></div><div className="p-4"><p className="font-semibold">{title}</p><p className="mt-1 text-sm text-muted-foreground">{description}</p></div></button>; }
 function Field({ label, value, onChange, type='text' }: { label: string; value: string; onChange?: (value: string) => void; type?: string }) { return <div className="space-y-1.5"><Label>{label}<span className="text-red-500"> *</span></Label><Input type={type} value={value} onChange={(event) => onChange?.(event.target.value)} readOnly={!onChange && false}/></div>; }
-function WidthButton({ active, label, onClick, children }: { active: boolean; label: string; onClick: () => void; children: React.ReactNode }) { return <button onClick={onClick} aria-label={`${label} preview`} aria-pressed={active} className={cn('rounded-md px-3 py-1.5 transition-colors', active ? 'bg-white text-co-blue shadow-sm' : 'text-muted-foreground hover:text-foreground')}>{children}</button>; }

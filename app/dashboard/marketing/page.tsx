@@ -1,28 +1,4 @@
-import { MarketingIntroPanel } from "./components/marketing-intro-panel";
-
-export default function MarketingDashboardPage() {
-  return (
-    <div className="space-y-6">
-      <MarketingIntroPanel
-        title="Reach Your Audience"
-        description="Use CultureOwl's marketing tools to communicate with the contacts connected to your organization."
-        items={[
-          { label: "Send email campaigns", href: "/dashboard/marketing/campaigns" },
-          { label: "Select CRM segments", href: "/dashboard/crm/segments" },
-          { label: "Build templates", href: "/dashboard/marketing/templates" },
-          { label: "Create tracked links", href: "/dashboard/marketing/links-tracking" },
-          "Schedule campaigns",
-          "View opens, clicks, purchases and revenue",
-          { label: "Automate with Workflows", href: "/dashboard/workflows" },
-        ]}
-        accent="blue"
-      />
-
-      <p className="rounded-xl bg-muted/40 px-5 py-4 text-sm text-muted-foreground">
-        <span className="font-semibold text-foreground">Your Marketing</span> helps you reach the audience you
-        already have. Looking to extend your reach through CultureOwl&apos;s own network? See{" "}
-        <span className="font-semibold text-foreground">CultureOwl Promotion</span> in the sidebar.
-      </p>
-    </div>
-  );
-}
+import Link from 'next/link';
+import { ArrowRight, BarChart3, CheckCircle2, Mail, Megaphone, Settings2, Share2 } from 'lucide-react';
+const tools=[{title:'Email',detail:'3 prototype drafts · provider not connected',href:'/dashboard/marketing/campaigns',icon:Mail},{title:'Social',detail:'Connect Facebook and Instagram',href:'/dashboard/marketing/social',icon:Share2},{title:'Paid ads',detail:'Meta setup required before launch',href:'/dashboard/marketing/paid-ads',icon:Megaphone},{title:'Connections',detail:'Review accounts, assets and sync health',href:'/dashboard/settings/integrations',icon:Settings2}];
+export default function MarketingPage(){return <div className="space-y-6"><div><h1 className="text-2xl font-bold">Marketing overview</h1><p className="mt-1 text-sm text-muted-foreground">Turn one CultureOwl event into email, organic posts and paid promotion.</p></div><div className="grid gap-3 md:grid-cols-2">{tools.map(({title,detail,href,icon:Icon})=><Link key={title} href={href} className="flex items-center gap-4 rounded-xl border bg-white p-4 hover:border-co-blue/40"><span className="rounded-lg bg-blue-50 p-3 text-co-blue"><Icon className="h-5 w-5"/></span><span className="min-w-0 flex-1"><span className="block font-semibold">{title}</span><span className="block truncate text-sm text-muted-foreground">{detail}</span></span><ArrowRight className="h-4 w-4 text-muted-foreground"/></Link>)}</div><div className="grid gap-4 lg:grid-cols-[1.4fr_1fr]"><section className="rounded-xl border bg-white"><div className="border-b p-4"><h2 className="font-semibold">Recent work</h2></div>{['Season announcement · Email draft','Member presale · Email draft','Lapsed patron win-back · Email draft'].map(item=><div key={item} className="flex items-center gap-3 border-b px-4 py-3 last:border-0"><CheckCircle2 className="h-4 w-4 text-slate-400"/><span className="flex-1 text-sm">{item}</span><span className="text-xs text-muted-foreground">Prototype</span></div>)}</section><section className="rounded-xl border bg-white p-5"><p className="flex items-center gap-2 font-semibold"><BarChart3 className="h-4 w-4 text-co-blue"/>Attribution readiness</p><p className="mt-2 text-sm text-muted-foreground">Campaign links can be prepared now. Ticket purchases, revenue and ROAS stay unavailable until a real order source and consent-safe tracking are connected.</p><Link href="/dashboard/marketing/insights" className="mt-4 inline-flex text-sm font-semibold text-co-blue">View insights plan <ArrowRight className="ml-1 h-4 w-4"/></Link></section></div><Link href="/dashboard/culture-owl-promotion" className="block rounded-xl bg-slate-100 px-5 py-4 text-sm text-muted-foreground">Want to reach CultureOwl&apos;s audience? <span className="font-semibold text-foreground">Explore CultureOwl Promotion →</span></Link></div>}
