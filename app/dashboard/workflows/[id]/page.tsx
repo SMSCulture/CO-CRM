@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { AlertTriangle, ArrowLeft, Save } from 'lucide-react';
+import { ArrowLeft, Save } from 'lucide-react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -25,6 +25,7 @@ export default function WorkflowBuilderPage() {
   const removeEdge = useWorkflowBuilderStore((state) => state.removeEdge);
   const toggleActive = useWorkflowBuilderStore((state) => state.toggleActive);
   const [saving, setSaving] = useState(false);
+  const [focusNodeId, setFocusNodeId] = useState<string | null>(null);
   const issues = useMemo(() => workflow ? validateWorkflow(workflow) : [], [workflow]);
 
   if (!workflow) return <div className="space-y-4"><Button variant="ghost" className="gap-2" onClick={() => router.push('/dashboard/workflows')}><ArrowLeft className="h-4 w-4" />Back to Workflows</Button><p className="text-sm text-muted-foreground">Workflow not found.</p></div>;
@@ -42,7 +43,19 @@ export default function WorkflowBuilderPage() {
   }
 
   function handleToggle() {
-    if (!toggleActive(workflow!.id)) toast.error('Fix the canvas validation issues before activating.');
+    if (toggleActive(workflow!.id)) return;
+    toast.dismiss();
+    toast.error(`${issues.length} item${issues.length === 1 ? '' : 's'} to fix before activation`, {
+      description: 'Open each issue to finish the workflow.',
+      duration: 6000,
+    });
+    issues.forEach((issue) => toast.warning(issue.message, {
+      duration: 10000,
+      action: issue.nodeId ? {
+        label: 'Open node',
+        onClick: () => setFocusNodeId(issue.nodeId ?? null),
+      } : undefined,
+    }));
   }
 
   return (
@@ -58,15 +71,10 @@ export default function WorkflowBuilderPage() {
         <div className="flex h-10 items-center gap-2"><Switch checked={workflow.isActive} onCheckedChange={handleToggle} id="workflow-active" /><Label htmlFor="workflow-active">{workflow.isActive ? 'Active' : 'Draft'}</Label></div>
       </div>
 
-      {issues.length > 0 && (
-        <div className="rounded-xl border border-amber-300 bg-amber-50 p-4 text-amber-950">
-          <div className="mb-2 flex items-center gap-2 font-semibold"><AlertTriangle className="h-4 w-4" />{issues.length} item{issues.length === 1 ? '' : 's'} to fix before activation</div>
-          <ul className="list-disc space-y-1 pl-5 text-sm">{issues.map((issue, index) => <li key={`${issue.nodeId ?? 'workflow'}-${index}`}>{issue.message}</li>)}</ul>
-        </div>
-      )}
-
       <WorkflowCanvas
         workflow={workflow}
+        focusNodeId={focusNodeId}
+        onFocusHandled={() => setFocusNodeId(null)}
         onUpdateNode={(nodeId, patch) => updateNode(workflow.id, nodeId, patch)}
         onAddNode={(node) => addNode(workflow.id, node)}
         onRemoveNode={(nodeId) => removeNode(workflow.id, nodeId)}

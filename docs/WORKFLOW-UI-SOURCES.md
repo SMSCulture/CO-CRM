@@ -12,3 +12,13 @@ Sources:
 - https://help.brevo.com/hc/en-us/articles/22724507709714-Review-the-statistics-and-email-report-of-an-automation
 - https://support.ludus.com/automations
 - https://help.salesforce.com/s/articleView?id=platform.flow_monitor_list_views.htm&language=en_US&type=5
+
+
+## Zapier editor correction
+
+The visual reference moved from n8n to Zapier after review. The editor now favors Zapier's cleaner step language and treatment: explicit trigger/action labels, white compact step cards, orange trigger identity, a restrained warm canvas, a single "Add a step" library, and configuration on selection. React Flow remains the open-source graph engine so branching and stored node positions still work.
+
+- [Zapier: get started with Zapier](https://zapier.com/blog/get-started-with-zapier/)
+- [Zapier: multi-step Zaps](https://zapier.com/blog/maximize-productivity-with-multi-step-zaps/)
+
+Zapier's documented editor pattern is top-to-bottom steps, plus buttons between steps, app/action choice, Configure, Test, and Publish. This prototype adopts the visual and interaction hierarchy without copying Zapier code or branding.

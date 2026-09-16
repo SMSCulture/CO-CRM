@@ -33,7 +33,7 @@ export default function RootLayout({
               <AuthInitializer>
                 {children}
                 <Toaster />
-                <SonnerToaster />
+                <SonnerToaster position="bottom-right" richColors closeButton />
               </AuthInitializer>
             </ThemeProvider>
           </ApolloWrapper>

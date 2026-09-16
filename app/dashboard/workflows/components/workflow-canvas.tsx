@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   Background,
   Controls,
@@ -21,6 +21,8 @@ import { WorkflowPalette, type PaletteItem } from './workflow-palette';
 
 interface Props {
   workflow: Workflow;
+  focusNodeId?: string | null;
+  onFocusHandled?: () => void;
   onUpdateNode: (nodeId: string, patch: Partial<Omit<WorkflowNode, 'id' | 'type'>>) => void;
   onAddNode: (node: Omit<WorkflowNode, 'id'>) => string;
   onRemoveNode: (nodeId: string) => void;
@@ -30,17 +32,24 @@ interface Props {
 
 const nodeTypes = { workflow: WorkflowCanvasNode };
 
-export function WorkflowCanvas({ workflow, onUpdateNode, onAddNode, onRemoveNode, onConnect, onRemoveEdge }: Props) {
+export function WorkflowCanvas({ workflow, focusNodeId, onFocusHandled, onUpdateNode, onAddNode, onRemoveNode, onConnect, onRemoveEdge }: Props) {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [localPositions, setLocalPositions] = useState<Record<string, WorkflowNode['position']>>({});
   const selectedNode = workflow.nodes.find((node) => node.id === selectedId) ?? null;
+
+  useEffect(() => {
+    if (!focusNodeId || !workflow.nodes.some((node) => node.id === focusNodeId)) return;
+    setSelectedId(focusNodeId);
+    onFocusHandled?.();
+  }, [focusNodeId, onFocusHandled, workflow.nodes]);
 
   const nodes = useMemo<Node[]>(() => workflow.nodes.map((node) => ({
     id: node.id,
     type: 'workflow',
     position: localPositions[node.id] ?? node.position,
     data: { workflowNode: node },
-  })), [workflow.nodes, localPositions]);
+    selected: node.id === selectedId,
+  })), [workflow.nodes, localPositions, selectedId]);
 
   const edges = useMemo<Edge[]>(() => workflow.edges.map((edge) => ({
     id: edge.id,
@@ -78,7 +87,7 @@ export function WorkflowCanvas({ workflow, onUpdateNode, onAddNode, onRemoveNode
   };
 
   return (
-    <div className="flex h-[calc(100vh-16rem)] min-h-[640px] overflow-hidden rounded-xl border border-border bg-slate-50">
+    <div className="flex h-[calc(100vh-16rem)] min-h-[640px] overflow-hidden rounded-xl border border-border bg-[#f7f5f2]">
       <WorkflowPalette onAdd={handleAdd} />
       <div className="min-w-0 flex-1">
         <ReactFlow
@@ -94,7 +103,7 @@ export function WorkflowCanvas({ workflow, onUpdateNode, onAddNode, onRemoveNode
           fitViewOptions={{ padding: 0.18, duration: 0 }}
           deleteKeyCode={['Backspace', 'Delete']}
         >
-          <Background gap={18} size={1} />
+          <Background gap={24} size={1} color="#d8d4cd" />
           <MiniMap pannable zoomable nodeStrokeWidth={3} className="!rounded-lg !border !bg-white" />
           <Controls showInteractive={false} />
         </ReactFlow>
