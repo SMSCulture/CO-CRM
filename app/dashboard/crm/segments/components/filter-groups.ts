@@ -1,64 +1,24 @@
-import { BarChart3, Sparkles, ShoppingCart, Users, Megaphone, Tag, History } from "lucide-react";
+import type { FilterField, FilterOperator } from './segment-types';
 
-export interface FilterGroup {
-  key: string;
+export interface FilterFieldDefinition {
+  value: FilterField;
   label: string;
-  subtitle: string;
-  icon: typeof BarChart3;
-  options: string[];
-  /** Tags render as badge chips instead of full-width boxes. */
-  asChips?: boolean;
+  category: 'Engagement' | 'Orders' | 'Demographics' | 'Marketing' | 'Tags';
+  operators: FilterOperator[];
+  valueType: 'text' | 'number' | 'date' | 'boolean' | 'activity';
 }
 
-export const FILTER_GROUPS: FilterGroup[] = [
-  {
-    key: "engagement",
-    label: "Engagement",
-    subtitle: "how they interact with culture",
-    icon: BarChart3,
-    options: ["Event engagement", "Total events", "Events purchased", "Events not purchased"],
-  },
-  {
-    key: "interests",
-    label: "Interests",
-    subtitle: "what they care about",
-    icon: Sparkles,
-    options: ["Music", "Art", "Theater", "Dance"],
-  },
-  {
-    key: "orders",
-    label: "Orders",
-    subtitle: "transactional behavior",
-    icon: ShoppingCart,
-    options: ["Ticket purchased", "Total spent", "Total donations", "Last purchase date"],
-  },
-  {
-    key: "demographics",
-    label: "Demographics",
-    subtitle: "who they are",
-    icon: Users,
-    options: ["City", "Age"],
-  },
-  {
-    key: "marketing",
-    label: "Marketing",
-    subtitle: "how you reach them",
-    icon: Megaphone,
-    options: ["Has Email", "SMS/Text", "Follower"],
-  },
-  {
-    key: "tags",
-    label: "Tags",
-    subtitle: "internal classification",
-    icon: Tag,
-    options: ["VIP", "Donor", "Member", "Volunteer", "Board", "New"],
-    asChips: true,
-  },
-  {
-    key: "history",
-    label: "History",
-    subtitle: "timeline & recency",
-    icon: History,
-    options: ["Contact added"],
-  },
+export const OPERATOR_LABELS: Record<FilterOperator, string> = {
+  is: 'is', is_not: 'is not', contains: 'contains', greater_than: 'is greater than', less_than: 'is less than', before: 'is before', after: 'is after',
+};
+
+export const FILTER_FIELDS: FilterFieldDefinition[] = [
+  { value: 'activityStatus', label: 'Activity status', category: 'Engagement', operators: ['is', 'is_not'], valueType: 'activity' },
+  { value: 'eventsPurchased', label: 'Events purchased', category: 'Engagement', operators: ['greater_than', 'less_than', 'is'], valueType: 'number' },
+  { value: 'eventsAttended', label: 'Events attended', category: 'Engagement', operators: ['greater_than', 'less_than', 'is'], valueType: 'number' },
+  { value: 'totalSpend', label: 'Lifetime spend', category: 'Orders', operators: ['greater_than', 'less_than', 'is'], valueType: 'number' },
+  { value: 'lastActivity', label: 'Last activity', category: 'Engagement', operators: ['before', 'after', 'is'], valueType: 'date' },
+  { value: 'city', label: 'City', category: 'Demographics', operators: ['is', 'is_not', 'contains'], valueType: 'text' },
+  { value: 'subscribedEmail', label: 'Email subscription', category: 'Marketing', operators: ['is'], valueType: 'boolean' },
+  { value: 'tags', label: 'Tag', category: 'Tags', operators: ['contains', 'is_not'], valueType: 'text' },
 ];
