@@ -14,7 +14,7 @@ import { useContactsData } from "../../contacts/hooks/use-contacts-data";
 interface SegmentBuilderDrawerProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onCreate: (segment: { name: string; description: string; filters: string[] }) => void;
+  onCreate: (segment: { name: string; description: string; filters: string[]; mode?: "active" | "static" }) => void;
 }
 
 export function SegmentBuilderDrawer({ open, onOpenChange, onCreate }: SegmentBuilderDrawerProps) {
@@ -23,6 +23,7 @@ export function SegmentBuilderDrawer({ open, onOpenChange, onCreate }: SegmentBu
   const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
+  const [mode, setMode] = useState<"active" | "static">("active");
 
   // Rough mock match count — decreases with each filter added, floor of 0.
   // Not real filter evaluation; there's no real contact schema to evaluate
@@ -38,6 +39,7 @@ export function SegmentBuilderDrawer({ open, onOpenChange, onCreate }: SegmentBu
     setSelectedFilters([]);
     setName("");
     setDescription("");
+    setMode("active");
   }
 
   function handleOpenChange(next: boolean) {
@@ -47,7 +49,7 @@ export function SegmentBuilderDrawer({ open, onOpenChange, onCreate }: SegmentBu
 
   function handleCreate() {
     if (!name.trim()) return;
-    onCreate({ name: name.trim(), description: description.trim(), filters: selectedFilters });
+    onCreate({ name: name.trim(), description: description.trim(), filters: selectedFilters, mode });
     handleOpenChange(false);
   }
 
@@ -134,6 +136,8 @@ export function SegmentBuilderDrawer({ open, onOpenChange, onCreate }: SegmentBu
               <ArrowLeft className="h-4 w-4" />
               Back to filters
             </button>
+
+            <div className="space-y-2"><Label>Segment type</Label><div className="grid grid-cols-2 gap-2"><button onClick={()=>setMode("active")} className={cn("rounded-lg border p-3 text-left",mode==="active"&&"border-co-blue bg-blue-50")}><b className="text-sm">Active</b><p className="text-xs text-muted-foreground">Updates as contacts qualify</p></button><button onClick={()=>setMode("static")} className={cn("rounded-lg border p-3 text-left",mode==="static"&&"border-co-blue bg-blue-50")}><b className="text-sm">Static</b><p className="text-xs text-muted-foreground">Fixed or manually assembled</p></button></div></div>
 
             <div className="space-y-2">
               <Label htmlFor="segment-name">Segment name</Label>

@@ -21,8 +21,11 @@ export interface WorkflowEdge {
   branch?: WorkflowBranch;
 }
 
+export type AutomationKind = 'event' | 'audience';
+
 export interface Workflow {
   id: string;
+  kind?: AutomationKind;
   name: string;
   description: string;
   nodes: WorkflowNode[];
@@ -131,7 +134,7 @@ interface WorkflowBuilderState {
   workflows: Workflow[];
   activeWorkflowId: string | null;
   setActiveWorkflowId: (id: string | null) => void;
-  createWorkflow: () => string;
+  createWorkflow: (kind?: AutomationKind, template?: string) => string;
   updateWorkflow: (id: string, patch: Partial<Omit<Workflow, 'id'>>) => void;
   addNode: (workflowId: string, node: Omit<WorkflowNode, 'id'>) => string;
   updateNode: (workflowId: string, nodeId: string, patch: Partial<Omit<WorkflowNode, 'id' | 'type'>>) => void;
@@ -149,12 +152,13 @@ export const useWorkflowBuilderStore = create<WorkflowBuilderState>()(
       workflows: STARTER_WORKFLOWS,
       activeWorkflowId: null,
       setActiveWorkflowId: (id) => set({ activeWorkflowId: id }),
-      createWorkflow: () => {
+      createWorkflow: (kind = 'event', template) => {
         const id = newId('wf');
         const workflow: Workflow = {
           id,
-          name: 'Untitled Workflow',
-          description: '',
+          name: template || (kind === 'event' ? 'Untitled Event Automation' : 'Untitled Audience Journey'),
+          description: kind === 'event' ? 'Promote and support an event across channels.' : 'Engage people as their relationship changes.',
+          kind,
           nodes: [triggerNode(newId('node'), 'manual', 'Manual trigger')],
           edges: [],
           isActive: false,

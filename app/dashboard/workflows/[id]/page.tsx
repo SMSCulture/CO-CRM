@@ -28,15 +28,15 @@ export default function WorkflowBuilderPage() {
   const [focusNodeId, setFocusNodeId] = useState<string | null>(null);
   const issues = useMemo(() => workflow ? validateWorkflow(workflow) : [], [workflow]);
 
-  if (!workflow) return <div className="space-y-4"><Button variant="ghost" className="gap-2" onClick={() => router.push('/dashboard/workflows')}><ArrowLeft className="h-4 w-4" />Back to Workflows</Button><p className="text-sm text-muted-foreground">Workflow not found.</p></div>;
+  if (!workflow) return <div className="space-y-4"><Button variant="ghost" className="gap-2" onClick={() => router.push('/dashboard/workflows')}><ArrowLeft className="h-4 w-4" />Back to Automations</Button><p className="text-sm text-muted-foreground">Automation not found.</p></div>;
 
   async function handleSave() {
     setSaving(true);
     try {
       await saveWorkflow(workflow!);
-      toast.success('Workflow saved');
+      toast.success('Automation saved');
     } catch {
-      toast.error('Workflow could not be saved');
+      toast.error('Automation could not be saved');
     } finally {
       setSaving(false);
     }
@@ -46,7 +46,7 @@ export default function WorkflowBuilderPage() {
     if (toggleActive(workflow!.id)) return;
     toast.dismiss();
     toast.error(`${issues.length} item${issues.length === 1 ? '' : 's'} to fix before activation`, {
-      description: 'Open each issue to finish the workflow.',
+      description: 'Open each issue to finish the automation.',
       duration: 6000,
     });
     issues.forEach((issue) => toast.warning(issue.message, {
@@ -61,8 +61,8 @@ export default function WorkflowBuilderPage() {
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <Button variant="ghost" className="gap-2" onClick={() => router.push('/dashboard/workflows')}><ArrowLeft className="h-4 w-4" />Back to Workflows</Button>
-        <Button className="gap-2" onClick={handleSave} disabled={saving}><Save className="h-4 w-4" />{saving ? 'Saving...' : 'Save workflow'}</Button>
+        <Button variant="ghost" className="gap-2" onClick={() => router.push('/dashboard/workflows')}><ArrowLeft className="h-4 w-4" />Back to Automations</Button>
+        <Button className="gap-2" onClick={handleSave} disabled={saving}><Save className="h-4 w-4" />{saving ? 'Saving...' : 'Save automation'}</Button>
       </div>
 
       <div className="grid gap-3 rounded-xl border bg-white p-4 lg:grid-cols-[1fr_1fr_auto] lg:items-end">

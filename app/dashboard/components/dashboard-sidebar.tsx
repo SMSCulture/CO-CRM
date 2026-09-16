@@ -12,7 +12,7 @@ const NAV_ITEMS = [
   { href: '/dashboard/marketing', label: 'Engagement', icon: Megaphone },
   { href: '/dashboard/culture-owl-promotion', label: 'Promotion', icon: Sparkles },
   { href: '/dashboard/analytics', label: 'Insights', icon: BarChart3 },
-  { href: '/dashboard/workflows', label: 'Workflows', icon: GitBranch },
+  { href: '/dashboard/workflows', label: 'Automations', icon: GitBranch },
   { href: '/dashboard/crm/tasks', label: 'Tasks', icon: ListTodo },
   { href: '/dashboard/settings', label: 'Settings', icon: Settings },
 ] as const;

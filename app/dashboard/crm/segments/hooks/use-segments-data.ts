@@ -13,6 +13,7 @@ export interface Segment {
   topCities: { label: string; pct: number }[];
   avgSpend: number;
   avgAge: number;
+  mode?: "active" | "static";
 }
 
 const MOCK_SEGMENTS: Segment[] = [
@@ -27,6 +28,7 @@ const MOCK_SEGMENTS: Segment[] = [
     topCities: [{ label: "Austin", pct: 71 }, { label: "Round Rock", pct: 14 }, { label: "Cedar Park", pct: 9 }],
     avgSpend: 4820,
     avgAge: 52,
+    mode: "static",
   },
   {
     id: "s2",
@@ -39,6 +41,7 @@ const MOCK_SEGMENTS: Segment[] = [
     topCities: [{ label: "Austin", pct: 58 }, { label: "Pflugerville", pct: 12 }, { label: "Round Rock", pct: 11 }],
     avgSpend: 210,
     avgAge: 45,
+    mode: "active",
   },
   {
     id: "s3",
@@ -51,6 +54,7 @@ const MOCK_SEGMENTS: Segment[] = [
     topCities: [{ label: "Austin", pct: 66 }, { label: "Cedar Park", pct: 15 }, { label: "Round Rock", pct: 10 }],
     avgSpend: 1650,
     avgAge: 49,
+    mode: "active",
   },
   {
     id: "s4",
@@ -63,6 +67,7 @@ const MOCK_SEGMENTS: Segment[] = [
     topCities: [{ label: "Austin", pct: 55 }, { label: "Round Rock", pct: 18 }, { label: "Pflugerville", pct: 12 }],
     avgSpend: 340,
     avgAge: 41,
+    mode: "active",
   },
   {
     id: "s5",
@@ -75,13 +80,14 @@ const MOCK_SEGMENTS: Segment[] = [
     topCities: [{ label: "Austin", pct: 62 }, { label: "Cedar Park", pct: 20 }, { label: "Round Rock", pct: 8 }],
     avgSpend: 95,
     avgAge: 31,
+    mode: "active",
   },
 ];
 
 export function useSegmentsData() {
   const [segments, setSegments] = useState<Segment[]>(MOCK_SEGMENTS);
 
-  function addSegment(input: { name: string; description: string; filters: string[] }) {
+  function addSegment(input: { name: string; description: string; filters: string[]; mode?: "active" | "static" }) {
     const newSegment: Segment = {
       id: crypto.randomUUID(),
       name: input.name,
@@ -93,6 +99,7 @@ export function useSegmentsData() {
       topCities: [],
       avgSpend: 0,
       avgAge: 0,
+      mode: input.mode ?? "active",
     };
     setSegments((prev) => [newSegment, ...prev]);
   }
