@@ -1,15 +1,5 @@
-import { Card, CardContent } from "@/components/ui/card";
-
-export default function EventsPage() {
-  return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold text-foreground">Events</h1>
-        <p className="mt-1 text-muted-foreground">Your event listings and programming calendar.</p>
-      </div>
-      <Card className="rounded-xl border-border border-dashed">
-        <CardContent className="p-10 text-center text-sm text-muted-foreground">Not built yet.</CardContent>
-      </Card>
-    </div>
-  );
-}
+import Link from "next/link";
+import { CalendarDays,Link2,Megaphone } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card,CardContent } from "@/components/ui/card";
+export default function EventsPage(){return <div className="space-y-6"><div><h1 className="text-3xl font-bold">Events</h1><p className="mt-1 text-muted-foreground">Your event listings and programming calendar.</p></div><Card><CardContent className="p-6"><div className="flex flex-wrap items-start justify-between gap-4"><div><p className="flex items-center gap-2 font-bold"><CalendarDays className="h-4 w-4 text-co-blue"/>Fall season announcement</p><p className="mt-1 text-sm text-muted-foreground">October 18 · Miami</p></div><Button asChild><Link href="/dashboard/marketing/paid-ads?source=event"><Megaphone className="mr-2 h-4 w-4"/>Promote event</Link></Button></div><div className="mt-5 border-t pt-4"><h2 className="font-semibold">Event marketing</h2><div className="mt-3 grid gap-3 md:grid-cols-2"><div className="rounded-lg border p-4"><p className="text-sm font-semibold">Tracking & conversions</p><p className="mt-1 text-xs text-muted-foreground">Using organization default · Meta Pixel / Dataset. Choose a this-event override in the ad wizard.</p><Link href="/dashboard/marketing/links-tracking" className="mt-3 inline-flex text-xs font-semibold text-co-blue">Change source</Link></div><div className="rounded-lg border p-4"><p className="text-sm font-semibold">Tracking links</p><p className="mt-1 text-xs text-muted-foreground">Create event-specific links for partners, channels and campaigns.</p><Button size="sm" variant="outline" className="mt-3"><Link2 className="mr-1 h-3.5 w-3.5"/>Create tracking link</Button></div></div></div></CardContent></Card></div>}

@@ -1,40 +1,10 @@
 "use client";
-
+import Link from "next/link";
 import { useState } from "react";
-import { useTrackingPixels, type PixelType } from "./hooks/use-tracking-pixels";
-import { PixelTypeGrid } from "./components/pixel-type-grid";
-import { AddPixelDialog } from "./components/add-pixel-dialog";
-import { TrackingPixelsTable } from "./components/tracking-pixels-table";
-
-export default function LinksTrackingPage() {
-  const { pixels, addPixel, removePixel } = useTrackingPixels();
-  const [activePixelType, setActivePixelType] = useState<PixelType | null>(null);
-
-  return (
-    <div className="space-y-8">
-      <div>
-        <h2 className="text-3xl font-bold text-foreground">Tracking Pixels</h2>
-        <p className="mt-1 text-muted-foreground">
-          Tracking pixels can help you measure the impact of your marketing, advertising, and analytics.
-        </p>
-      </div>
-
-      <div className="space-y-4">
-        <h3 className="text-xl font-bold text-foreground">Supported Tracking Pixels</h3>
-        <PixelTypeGrid onSelect={setActivePixelType} />
-      </div>
-
-      <TrackingPixelsTable pixels={pixels} onRemove={removePixel} />
-
-      <AddPixelDialog
-        pixelType={activePixelType}
-        onClose={() => setActivePixelType(null)}
-        onSave={(input) => {
-          if (!activePixelType) return;
-          addPixel({ pixelTypeId: activePixelType.id, ...input });
-          setActivePixelType(null);
-        }}
-      />
-    </div>
-  );
-}
+import { BarChart3, CheckCircle2, Code2, Facebook, Link2, Plus, Radio, Settings2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Select,SelectContent,SelectItem,SelectTrigger,SelectValue } from "@/components/ui/select";
+const providers=[['Meta Pixel / Dataset','Selected from Meta connection','Connect Meta',Facebook],['Google Analytics','Measurement ID','Add ID',BarChart3],['Google Ads','Conversion ID + label','Add ID',Radio],['TikTok Pixel','Pixel ID','Add ID',Code2],['X Pixel','Pixel ID','Add ID',Code2],['Pinterest conversion tag','Tag ID','Add ID',Code2],['Simple image pixel','Image URL','Add URL',Code2]] as const;
+export default function TrackingConversionsPage(){const[defaultSource,setDefaultSource]=useState('meta');return <div className="space-y-6"><div className="flex flex-wrap items-end justify-between gap-3"><div><h1 className="text-2xl font-bold">Tracking & conversions</h1><p className="mt-1 text-sm text-muted-foreground">Organization defaults for attribution. Events can inherit these sources or use an override.</p></div><Button asChild variant="outline"><Link href="/dashboard/settings/integrations/meta-ads"><Settings2 className="mr-2 h-4 w-4"/>Meta connection</Link></Button></div><section className="rounded-xl border bg-white p-5"><div className="grid gap-5 lg:grid-cols-2"><div><Label>Organization default conversion source</Label><Select value={defaultSource} onValueChange={setDefaultSource}><SelectTrigger className="mt-2"><SelectValue/></SelectTrigger><SelectContent><SelectItem value="meta">Meta Pixel / Dataset from connected account</SelectItem><SelectItem value="google">Google Analytics</SelectItem><SelectItem value="none">No organization default</SelectItem></SelectContent></Select><p className="mt-2 text-xs text-muted-foreground">Applied to all events unless an event chooses a different source.</p></div><div className="rounded-lg bg-slate-50 p-4"><p className="text-sm font-semibold">Standard event mapping</p><div className="mt-2 flex flex-wrap gap-2">{['Page view','Initiate checkout','Purchase'].map(event=><span key={event} className="rounded-full border bg-white px-3 py-1 text-xs"><CheckCircle2 className="mr-1 inline h-3.5 w-3.5 text-emerald-600"/>{event}</span>)}</div><p className="mt-2 text-xs text-muted-foreground">Purchase events will be deduplicated between browser Pixel and server-side Conversions API.</p></div></div></section><section><div className="mb-3"><h2 className="text-lg font-bold">Provider sources</h2><p className="text-sm text-muted-foreground">Pixels are provider assets, not standalone integrations.</p></div><div className="grid gap-3 md:grid-cols-2">{providers.map(([name,detail,action,Icon],i)=><div key={name} className="flex items-center gap-3 rounded-xl border bg-white p-4"><span className="rounded-lg bg-slate-50 p-2"><Icon className="h-5 w-5 text-co-blue"/></span><div className="min-w-0 flex-1"><p className="font-semibold">{name}</p><p className="text-xs text-muted-foreground">{detail}</p></div>{i===0?<Button asChild size="sm" variant="outline"><Link href="/dashboard/settings/integrations/meta-ads">{action}</Link></Button>:<Button size="sm" variant="outline"><Plus className="mr-1 h-3.5 w-3.5"/>{action}</Button>}</div>)}</div></section><section className="rounded-xl border bg-white p-5"><h2 className="font-bold">Server-side conversions</h2><p className="mt-1 text-sm text-muted-foreground">Designed for Meta Conversions API from the start: encrypted provider credential, event ID deduplication, source URL, consent state and purchase value/currency.</p><div className="mt-4 grid gap-3 md:grid-cols-3"><div><Label>Connection</Label><Input className="mt-1" disabled value="Meta connection supplies credential"/></div><div><Label>Dataset</Label><Input className="mt-1" disabled value="Selected after Meta connect"/></div><div><Label>Status</Label><Input className="mt-1" disabled value="Backend endpoint not connected"/></div></div><p className="mt-3 text-xs text-muted-foreground">Conversions API tokens are secrets and will be stored server-side. They are never entered into event forms or shown back to staff.</p></section><section className="rounded-xl border bg-white p-5"><div className="flex items-center justify-between"><div><h2 className="font-bold">Tracking links</h2><p className="text-sm text-muted-foreground">Created per event to attribute partner, channel and campaign traffic.</p></div><Button asChild variant="outline"><Link href="/dashboard/events"><Link2 className="mr-2 h-4 w-4"/>Open events</Link></Button></div></section></div>}
