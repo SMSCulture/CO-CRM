@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft, Mail, Phone, MapPin, Calendar, MessageSquareText } from "lucide-react";
+import { ArrowLeft, Cake, Heart, Mail, Phone, MapPin, Calendar, MessageSquareText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
@@ -90,6 +90,8 @@ export default function ContactProfilePage() {
                   <Calendar className="h-3.5 w-3.5" />
                   Member since {contact.memberSince}
                 </span>
+                <span className="flex items-center gap-1.5"><Cake className="h-3.5 w-3.5" />Birthday {contact.birthday}</span>
+                <span className="flex items-center gap-1.5"><Heart className="h-3.5 w-3.5" />{contact.interests.join(", ")}</span>
               </div>
               <div className="mt-3">
                 <TagManager tags={tags} onChange={setTags} />
