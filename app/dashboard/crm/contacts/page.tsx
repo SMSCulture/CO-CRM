@@ -1,15 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import { Search, Upload, Download, ListPlus, Plus } from "lucide-react";
+import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import { useContactsData, useFilteredContacts } from "./hooks/use-contacts-data";
 import { ContactActivityFilters } from "./components/contact-tag-filters";
 import { ContactsTable } from "./components/contacts-table";
+import { ContactsToolbar } from "./components/contacts-toolbar";
 
 export default function ContactsPage() {
-  const { contacts } = useContactsData();
+  const { contacts, addContact, importContacts } = useContactsData();
   const [search, setSearch] = useState("");
   const [activeFilter, setActiveFilter] = useState("All");
   const filtered = useFilteredContacts(contacts, search, activeFilter);
@@ -22,24 +22,7 @@ export default function ContactsPage() {
           <h2 className="mt-1 text-3xl font-bold tracking-tight text-foreground">Contacts</h2>
           <p className="mt-1 text-muted-foreground">{contacts.length} total contacts</p>
         </div>
-        <div className="flex flex-wrap gap-2">
-          <Button variant="outline" className="gap-2">
-            <ListPlus className="h-4 w-4" />
-            Custom Properties
-          </Button>
-          <Button variant="outline" className="gap-2">
-            <Upload className="h-4 w-4" />
-            Import
-          </Button>
-          <Button variant="outline" className="gap-2">
-            <Download className="h-4 w-4" />
-            Export
-          </Button>
-          <Button className="gap-2">
-            <Plus className="h-4 w-4" />
-            Add Contact
-          </Button>
-        </div>
+        <ContactsToolbar contacts={contacts} onAdd={addContact} onImport={importContacts} />
       </div>
 
       <div className="flex flex-wrap items-center gap-3 rounded-2xl border border-border bg-card p-3 shadow-[0_1px_2px_rgba(15,23,42,0.03)]">

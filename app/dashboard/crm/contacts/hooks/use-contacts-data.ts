@@ -54,8 +54,10 @@ const MOCK_CONTACTS: Contact[] = [
 ];
 
 export function useContactsData() {
-  const [contacts] = useState<Contact[]>(MOCK_CONTACTS);
-  return { contacts, isLoading: false };
+  const [contacts, setContacts] = useState<Contact[]>(MOCK_CONTACTS);
+  const addContact = (contact: Contact) => setContacts((current) => [contact, ...current]);
+  const importContacts = (incoming: Contact[]) => setContacts((current) => [...incoming, ...current]);
+  return { contacts, addContact, importContacts, isLoading: false };
 }
 
 export function useFilteredContacts(contacts: Contact[], search: string, activeFilter: string) {
