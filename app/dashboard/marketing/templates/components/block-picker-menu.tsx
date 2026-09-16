@@ -18,7 +18,7 @@ const NEW_BLOCK_OPTIONS = [
 
 // Click-based block insertion, matching the original's non-drag-and-drop
 // approach — appends a new block to the end of the root EmailLayout.
-export function BlockPickerMenu() {
+export function BlockPickerMenu({ compact = false }: { compact?: boolean }) {
   const document = useEmailTemplateBuilderStore((s) => s.document);
   const setDocument = useEmailTemplateBuilderStore((s) => s.setDocument);
   const setSelectedBlockId = useEmailTemplateBuilderStore((s) => s.setSelectedBlockId);
@@ -38,9 +38,9 @@ export function BlockPickerMenu() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" size="sm" className="gap-1.5">
+        <Button variant={compact ? "ghost" : "outline"} size="sm" className="gap-1.5 px-2">
           <Plus className="h-4 w-4" />
-          Add Block
+          {compact ? "Add" : "Add content"}
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="center">

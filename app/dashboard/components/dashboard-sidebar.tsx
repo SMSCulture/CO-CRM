@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { BarChart3, Home, LogOut, Megaphone, Settings, Sparkles, UsersRound, ListTodo } from 'lucide-react';
+import { BarChart3, GitBranch, Home, LogOut, Megaphone, Settings, Sparkles, UsersRound, ListTodo } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAuthStore } from '@/store/auth-store';
 
@@ -12,6 +12,7 @@ const NAV_ITEMS = [
   { href: '/dashboard/marketing', label: 'Engagement', icon: Megaphone },
   { href: '/dashboard/culture-owl-promotion', label: 'Promotion', icon: Sparkles },
   { href: '/dashboard/analytics', label: 'Insights', icon: BarChart3 },
+  { href: '/dashboard/workflows', label: 'Workflows', icon: GitBranch },
   { href: '/dashboard/crm/tasks', label: 'Tasks', icon: ListTodo },
   { href: '/dashboard/settings', label: 'Settings', icon: Settings },
 ] as const;
