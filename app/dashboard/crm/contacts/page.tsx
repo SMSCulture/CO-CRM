@@ -15,10 +15,11 @@ export default function ContactsPage() {
   const filtered = useFilteredContacts(contacts, search, activeFilter);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 animate-in fade-in duration-200">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
-          <h2 className="text-3xl font-bold text-foreground">Contacts</h2>
+          <p className="text-xs font-bold uppercase tracking-[0.18em] text-co-blue">Audience CRM</p>
+          <h2 className="mt-1 text-3xl font-bold tracking-tight text-foreground">Contacts</h2>
           <p className="mt-1 text-muted-foreground">{contacts.length} total contacts</p>
         </div>
         <div className="flex flex-wrap gap-2">
@@ -41,7 +42,7 @@ export default function ContactsPage() {
         </div>
       </div>
 
-      <div className="flex flex-wrap items-center gap-3">
+      <div className="flex flex-wrap items-center gap-3 rounded-2xl border border-border bg-card p-3 shadow-[0_1px_2px_rgba(15,23,42,0.03)]">
         <div className="relative max-w-sm flex-1">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <Input
