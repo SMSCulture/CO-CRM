@@ -1,7 +1,3 @@
-import Link from 'next/link';
-import { ChevronRight, PlugZap } from 'lucide-react';
-import { Card, CardContent } from '@/components/ui/card';
-
-export default function SettingsPage() {
-  return <div className="space-y-6"><div><h2 className="text-3xl font-bold">Settings</h2><p className="mt-1 text-muted-foreground">Company configuration and connected services.</p></div><Link href="/dashboard/settings/integrations"><Card className="transition-colors hover:border-co-blue/40"><CardContent className="flex items-center gap-4 p-5"><span className="rounded-xl bg-co-blue/10 p-3 text-co-blue"><PlugZap className="h-5 w-5" /></span><div className="flex-1"><p className="font-semibold">Integrations</p><p className="text-sm text-muted-foreground">Check Brevo, Stripe, HubSpot and ad-platform availability.</p></div><ChevronRight className="h-4 w-4 text-muted-foreground" /></CardContent></Card></Link></div>;
-}
+import { Building2,Shield,Users } from 'lucide-react';
+const settings=[['Organization','Name, branding and business details',Building2],['Team','People, roles and access',Users],['Account','Security and account preferences',Shield]] as const;
+export default function SettingsPage(){return <div className="grid gap-3 md:grid-cols-3">{settings.map(([title,detail,Raw])=>{const Icon=Raw;return <div key={title} className="rounded-xl border bg-white p-5"><Icon className="h-5 w-5 text-co-blue"/><h2 className="mt-3 font-bold">{title}</h2><p className="mt-1 text-sm text-muted-foreground">{detail}</p></div>})}</div>}
