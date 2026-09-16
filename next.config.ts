@@ -2,6 +2,8 @@ import type { NextConfig } from "next";
 import { withSentryConfig } from "@sentry/nextjs";
 
 const nextConfig: NextConfig = {
+  output: "standalone",
+  experimental: { cpus: 1 },
   images: {
     remotePatterns: [
       {
@@ -41,7 +43,9 @@ const nextConfig: NextConfig = {
   serverExternalPackages: ["jose"],
 };
 
-export default withSentryConfig(nextConfig, {
+const configuredNext = process.env.NEXT_PUBLIC_DEMO_MODE === "true"
+  ? nextConfig
+  : withSentryConfig(nextConfig, {
   org: process.env.SENTRY_ORG,
   project: process.env.SENTRY_PROJECT,
   silent: !process.env.CI,
@@ -49,4 +53,6 @@ export default withSentryConfig(nextConfig, {
   tunnelRoute: "/monitoring",
   disableLogger: true,
   automaticVercelMonitors: true,
-});
+  });
+
+export default configuredNext;

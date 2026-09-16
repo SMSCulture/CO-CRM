@@ -7,14 +7,27 @@ import { logger } from '@/lib/logger';
 export function AuthInitializer({ children }: { children: React.ReactNode }) {
   const initializeAuth = useAuthStore((state) => state.initializeAuth);
   const loadUserPermissions = useAuthStore((state) => state.loadUserPermissions);
+  const setUser = useAuthStore((state) => state.setUser);
   const user = useAuthStore((state) => state.user);
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const permissionsLoadedRef = useRef(false);
 
   useEffect(() => {
-    // Initialize auth first
+    if (process.env.NEXT_PUBLIC_DEMO_MODE === 'true') {
+      setUser({
+        id: 'cultureowl-demo',
+        email: 'demo@cultureowl.com',
+        firstName: 'CultureOwl',
+        lastName: 'Demo',
+        isActive: true,
+        role: { id: 'demo-admin', name: 'SUPER_ADMIN', displayName: 'Demo administrator' },
+        permissions: [],
+        companyMemberships: [{ company: { id: 'demo-company', name: 'CultureOwl Arts Demo', status: 'ACTIVE' } }],
+      });
+      return;
+    }
     initializeAuth();
-  }, [initializeAuth]);
+  }, [initializeAuth, setUser]);
 
   useEffect(() => {
     // Load permissions after user is authenticated (Apollo Client is now available)

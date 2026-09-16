@@ -93,6 +93,7 @@ export function ProtectedPage({
   unauthorizedComponent,
 }: ProtectedPageProps) {
   const router = useRouter();
+  const isDemo = process.env.NEXT_PUBLIC_DEMO_MODE === 'true';
   
   const {
     hasAccess,
@@ -123,6 +124,10 @@ export function ProtectedPage({
   const handleGoBack = () => {
     router.push(fallbackPath);
   };
+
+  if (isDemo) {
+    return <>{children}</>;
+  }
 
   // Show loading state
   if (isLoading) {
