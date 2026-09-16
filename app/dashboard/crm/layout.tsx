@@ -19,8 +19,8 @@ export default function CrmLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold text-foreground">CRM</h1>
-        <p className="mt-1 text-muted-foreground">Manage contacts, audience segments, and relationships.</p>
+        <h1 className="text-3xl font-bold text-foreground">Audience</h1>
+        <p className="mt-1 text-muted-foreground">Understand people, build audiences, and manage relationships.</p>
       </div>
 
       <div className="border-b border-border">

@@ -27,7 +27,9 @@ export function DashboardSidebar() {
       </Link>
       <nav className="flex-1 space-y-1 overflow-y-auto px-3 py-3" aria-label="Main navigation">
         {NAV_ITEMS.map((item) => {
-          const active = 'exact' in item && item.exact ? pathname === item.href : pathname?.startsWith(item.href);
+          const active = item.href === '/dashboard/crm'
+            ? pathname?.startsWith(item.href) && !pathname.startsWith('/dashboard/crm/tasks')
+            : 'exact' in item && item.exact ? pathname === item.href : pathname?.startsWith(item.href);
           return <Link key={item.href} href={item.href} className={cn('flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors', active ? 'bg-co-blue/10 text-co-blue' : 'text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground')}><item.icon className="h-4 w-4" />{item.label}</Link>;
         })}
       </nav>
