@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Mail, Share2, Image as ImageIcon, Star, BookOpen, Sparkles, ChevronRight } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
+import { PromotionCreditDashboard } from "./components/promotion-credit-dashboard";
 
 const PROMOTION_OPTIONS = [
   { href: "/dashboard/culture-owl-promotion/escoops", label: "Book an eScoop", icon: Mail },
@@ -22,7 +23,11 @@ export default function CultureOwlPromotionPage() {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+      <PromotionCreditDashboard />
+
+      <div>
+        <h3 className="mb-3 text-xl font-bold">Promotion catalog</h3>
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
         {PROMOTION_OPTIONS.map((option) => (
           <Link key={option.href} href={option.href}>
             <Card className="rounded-xl border-border transition-colors hover:border-co-purple/40">
@@ -36,6 +41,7 @@ export default function CultureOwlPromotionPage() {
             </Card>
           </Link>
         ))}
+        </div>
       </div>
     </div>
   );
