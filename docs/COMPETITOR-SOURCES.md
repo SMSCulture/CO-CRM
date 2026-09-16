@@ -22,3 +22,15 @@
 - GetApp Ludus - https://www.getapp.com/customer-management-software/a/ludus/ - review aggregator.
 - Software Advice Ludus - https://www.softwareadvice.com/product/458342-Ludus/ - review aggregator.
 - TrustRadius Audience Republic - https://www.trustradius.com/compare-products/audience-republic - review aggregator, sparse public evidence.
+
+## Audience Republic integration deep dive
+- Integration catalog - https://www.audiencerepublic.com/integrations
+- Eventbrite setup - https://intercom.help/audiencerepublic/en/articles/10288252-how-to-connect-to-eventbrite
+- Humanitix setup and supported/unsupported data - https://intercom.help/audiencerepublic/en/articles/11167498-how-to-connect-to-humanitix
+- DICE token setup and data scope - https://intercom.help/audiencerepublic/en/articles/11175222-how-to-connect-to-dice
+- API tokens, supported data, errors, tags and opt-in - https://intercom.help/audiencerepublic/en/articles/11568653-api
+- TikTok Ads account and segment sync troubleshooting - https://intercom.help/audiencerepublic/en/articles/11166240-tiktok-ad-account
+- Google Ads account and dynamic segment sync - https://intercom.help/audiencerepublic/en/articles/11166221-google-ad-account
+- Meta Custom Audiences permissions, sync and reconnect - https://intercom.help/audiencerepublic/en/articles/11183033-meta-facebook-custom-audiences
+- Zapier connection and consent mapping - https://intercom.help/audiencerepublic/en/articles/11166255-how-to-connect-to-zapier
+- Ticket data CSV modes, mapping and correction - https://intercom.help/audiencerepublic/en/articles/11186939-importing-ticket-sales-and-event-data

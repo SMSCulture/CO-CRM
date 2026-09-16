@@ -79,3 +79,75 @@ CultureOwl should inventory the full operating system across all three products 
 - Audience Republic conversion documentation requires an email open, link click, and purchase for the reviewed conversion definition. CultureOwl should decide whether to offer that strict rule plus first/last-touch models rather than copying a single attribution rule.
 - Ludus has broad public feature detail, but some operational behaviors need product documentation before implementation.
 - The real co_api bundle is still pending a non-Slack delivery route. Backend claims must be reconciled against it before API code is written.
+
+## Priority deep dive: Audience Republic integration model
+
+Sean's priority is not an app-store gallery. It is the data-operating model Audience Republic uses across ticketing, advertising, messaging and API/automation sources.
+
+### Verified catalog
+
+The current public catalog lists ticketing connectors for AudienceView, DICE, Eventbrite, Eventix, Humanitix, Leap Event Technology, Megatix, Moshtix, Oztix, Shotgun, Showclix, Ticketek, Ticket Fairy, ticket.io, Ticketmaster, TicketSpice, Ticket Tailor, Tixr, TryBooking, Universe, Vivenu and Xceed. Advertising connectors include Google Ads Audiences, Meta Audiences and TikTok Audiences. The help center also documents Zapier and a bearer-token API.
+
+### What ticketing connectors do
+
+- Sync events, ticket-sale orders and attendees/contacts, not only email addresses.
+- Preserve provider/source identity so imported and synced events are distinguishable.
+- Expose provider-specific setup because authentication varies. Examples reviewed: Eventbrite authorization, Humanitix connection, and DICE access token.
+- Document supported and unsupported fields per connector instead of promising universal parity.
+- Surface discrepancies and troubleshooting as integration state, not as silent data loss.
+- Offer CSV ingestion when a provider is unsupported, including import mode, date format, timezone, currency, source, column mapping, custom fields and in-product format correction.
+
+### What ad connectors do
+
+- Let a saved dynamic segment be selected and synced into a chosen ad account.
+- Keep the external audience updated as the source segment changes.
+- Require the right external account and admin permissions.
+- Show sync progress, errors and reconnect paths. Common causes in the reviewed docs include expired/mismatched tokens, insufficient account permission, dirty email/phone formats and external audience limits.
+
+### What API and automation connectors do
+
+- Use scoped bearer tokens and provide test-call guidance.
+- Accept contact tags and marketing opt-in state explicitly.
+- Return validation errors for bad or missing fields.
+- Zapier mapping includes email, mobile and marketing opt-in rather than treating consent as an afterthought.
+
+### CultureOwl integration object model
+
+A production integration needs more than `connected: boolean`:
+
+```ts
+interface IntegrationConnection {
+  id: string;
+  companyId: string;
+  provider: string;
+  category: 'ticketing' | 'advertising' | 'messaging' | 'crm' | 'automation';
+  status: 'connected' | 'syncing' | 'action_required' | 'error' | 'disconnected';
+  externalAccountId?: string;
+  externalAccountName?: string;
+  scopes: string[];
+  connectedBy: string;
+  connectedAt: string;
+  lastSyncAt?: string;
+  lastSuccessfulSyncAt?: string;
+  cursor?: string;
+  errorCode?: string;
+  errorSummary?: string;
+  fieldMappings?: IntegrationFieldMapping[];
+  syncSettings: Record<string, unknown>;
+}
+```
+
+Add provider capabilities so UI and jobs know which objects and directions are supported: events, orders, attendees, refunds, opt-ins, tags, custom fields, segment export, historical backfill, incremental sync and webhooks.
+
+### Build order for integrations
+
+1. Connection registry, encrypted secret reference, scopes, account identity, health and audit.
+2. Sync-run ledger with started/completed timestamps, cursor, object counts, rejects and errors.
+3. Canonical event/order/contact/source identifiers and idempotent upsert rules.
+4. CSV importer as the universal fallback, with mapping templates and correction queue.
+5. First ticketing adapter chosen from real customer demand; prove history backfill plus incremental updates.
+6. Segment destination framework, then Meta/Google/TikTok adapters with consent-safe hashing and automatic refresh.
+7. API tokens/webhooks and Zapier-style automation bridge.
+8. Admin UI for reconnect, resync, mappings, logs and disconnect.
+
+Do not claim every connector syncs every field. Maintain a capability matrix per provider and expose it in product documentation and setup UI.
